@@ -14,6 +14,7 @@ usethis::use_data(exd_1, exd_1)
 usethis::use_data(exd_2, exd_2)
 
 load("Data/d1.rda")
+load("Data/d2.rda")
 
 # lat, lon, elevation_m, in_camp, unix_time, distance_from_camp_m, utm_epsg
 
