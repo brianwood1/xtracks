@@ -56,14 +56,14 @@ xtrack <- setRefClass("xtrack",
 
                          track_length_km <<- round(sp::LineLength(pts, longlat=TRUE, sum=TRUE), 3)
 
-                         #print(paste0("the length from LineLength: ", track_length_km))
+
                          trackpoints$seconds_since_prior_trackpoint <<- c(0,diff(trackpoints$unix_time))
                          trackpoints$meters_from_prior_trackpoint <<- 0
                          distances <- geosphere::distHaversine(p1=cbind(trackpoints$lon[1:(nrow(trackpoints)-1)], trackpoints$lat[1:(nrow(trackpoints)-1)]), p2=cbind(trackpoints$lon[2:nrow(trackpoints)], trackpoints$lat[2:nrow(trackpoints)]))
                          trackpoints$meters_from_prior_trackpoint <<- c(0,distances)
                          trackpoints$speed_m_s_from_prior_trackpoint <<- trackpoints$meters_from_prior_trackpoint/trackpoints$seconds_since_prior_trackpoint
                          trackpoints$speed_m_s_from_prior_trackpoint[1] <<- 0
-                         #person_and_camp <- dbGetQuery(con_ti, paste("SELECT `fk_camp`, `fk_person` FROM `track` WHERE `pk_track_id`='",pk_track_id, "'", sep=""))
+
                          track_duration_hr <<- (trackpoints$unix_time[nrow(trackpoints)]-trackpoints$unix_time[1])/60/60
                          utm_epsg <<- utm_epsg
                          # this code is specific to where I work in Tanzania. Need to add this as a general function to translate data to UTM
