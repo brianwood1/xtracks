@@ -18,23 +18,23 @@ load("Data/d2.rda")
 
 # lat, lon, elevation_m, in_camp, unix_time, distance_from_camp_m, utm_epsg
 
-# To construct fcdan xtrack object, one must specify:
-# the lat, lon, elevation, in-camp status, time, distance from camp centroid, whether each
-# trackpoint is "in camp" or not, and the utm_epsg code.
-# lat and lon are expected to be in decimal-degree, WGS 84 format,
-# which is the default in most GPS devices mobile devices.
-# elevation is expected to be in meters above sealevel.
-# the "in_camp" parameter refers to whether each trackpoint is within or outside the boundaries
-# of a residential area, which in Wood et al. 2021 refers to the spatial boundaries of a Hadza camp;
-# but could more generally be considered the boundaries of a residential or habitation area, something
-# like a village or a camp, as appropriate in a given field setting. This is useful for indicating
-# travel for the purpose of aquiring resources -- AKA foraging travel, and needed for sinuosity measures.
-# Distance from camp centroid is expected to be the as-the-crow-flies distance
-# from the center of a residential area / 'camp' in meters (also needed for sinuosity measures).
-# The epsg code identifies the UTM zone of your study location.
-# This is needed for projecting lat / lon coordinates into UTM space.
-# To find the epsg code for your study location region of your track,
-# check out https://spatialreference.org/ref/epsg/
+To construct an xtrack object, one must specify:
+the lat, lon, elevation, in-camp status, time, distance from camp centroid, whether each
+trackpoint is "in camp" or not, and the utm_epsg code.
+lat and lon are expected to be in decimal-degree, WGS 84 format,
+which is the default in most GPS devices mobile devices.
+elevation is expected to be in meters above sealevel.
+the "in_camp" parameter refers to whether each trackpoint is within or outside the boundaries
+of a residential area, which in Wood et al. 2021 refers to the spatial boundaries of a Hadza camp;
+but could more generally be considered the boundaries of a residential or habitation area, something
+like a village or a camp, as appropriate in a given field setting. This is useful for indicating
+travel for the purpose of aquiring resources -- AKA foraging travel, and needed for sinuosity measures.
+Distance from camp centroid is expected to be the as-the-crow-flies distance
+from the center of a residential area / 'camp' in meters (also needed for sinuosity measures).
+The epsg code identifies the UTM zone of your study location.
+This is needed for projecting lat / lon coordinates into UTM space.
+To find the epsg code for your study location region of your track,
+check out https://spatialreference.org/ref/epsg/
 
 xt_1 <- xtrack(lat=d1$lat, lon=d1$lon, elevation_m=d1$elevation_m, in_camp=d1$in_camp, unix_time=d1$unix_time, distance_from_camp_m=d1$distance_from_camp_m, utm_epsg=32736)
 xt_2 <- xtrack(lat=d2$lat, lon=d2$lon, elevation_m=d2$elevation_m, in_camp=d2$in_camp, unix_time=d2$unix_time, distance_from_camp_m=d2$distance_from_camp_m, utm_epsg=32736)
