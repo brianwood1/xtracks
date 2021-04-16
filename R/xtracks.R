@@ -13,15 +13,21 @@
 # if("maptools" %in% rownames(installed.packages()) == FALSE) {install.packages("maptools")}
 # if("mapview" %in% rownames(installed.packages()) == FALSE) {install.packages("mapview")}
 #
-# library(sp)
-# library(sf)
-# library(geosphere)
-# library(ggplot2)
-# library(raster)
-# library(ggsn)
-# library(maptools)
-# library(mapview)
+ # library(sp)
+ # library(sf)
+ # library(geosphere)
+ # library(ggplot2)
+ # library(raster)
+ # library(ggsn)
+ # library(maptools)
+ # library(mapview)
 
+
+#' An xtrack object represents the movement of one individual on one day.
+#'
+#' @field trackpoints A dataframe of trackpoints
+#' @field track_length_km The length of the trajectory in km
+#' @field track_duration_hr the total duration of the xtrack in hours
 #' @export
 xtrack <- setRefClass("xtrack",
                      fields = list(pk_track_id="numeric", int_track_id="numeric", int_res_sec="numeric", person_id="character", age="numeric", sex="character",
@@ -36,6 +42,7 @@ xtrack <- setRefClass("xtrack",
                      ),methods=list(
                        initialize=function(lat, lon, elevation_m, in_camp, unix_time, distance_from_camp_m, utm_epsg)
                        {
+                         "Creates an xtrack object. To construct an xtrack object, one must specify: the lat, lon, elevation, in-camp status, time, distance from camp centroid, whether each trackpoint is \'in camp\' or not, and the utm_epsg code. lat and lon are expected to be in decimal-degree, WGS 84 format, which is the default in most GPS devices mobile devices. Elevation is expected to be in meters above sealevel. the \"in_camp\" parameter refers to whether each trackpoint is within or outside the boundaries of a residential area, which in Wood et al. 2021 refers to the spatial boundaries of a Hadza camp; but could more generally be considered the boundaries of a residential or habitation area, something like a village or a camp, as appropriate in a given field setting. This is useful for indicating travel for the purpose of aquiring resources -- AKA foraging travel, and needed for sinuosity measures.Distance from camp centroid is expected to be the as-the-crow-flies distance from the center of a residential area  or 'camp' in meters (also needed for sinuosity measures). The epsg code identifies the UTM zone of your study location. This is needed for projecting lat / lon coordinates into UTM space. To find the epsg code for your study location region of your track, check out <https://spatialreference.org/ref/epsg/>"
                          trackpoints <<- data.frame(lat=lat, lon=lon, elevation_m=elevation_m, in_camp=in_camp, unix_time=unix_time, distance_from_camp_m=distance_from_camp_m)
                          trackpoints <<- trackpoints[order(trackpoints$unix_time),]
                          trackpoints$pk_trackpoint_id <<- 1:nrow(trackpoints)
@@ -100,6 +107,7 @@ xtrack <- setRefClass("xtrack",
                        },
                        as_mapview = function(format=c("line"), ...)
                        {
+                         "# A call to as_mapview is a thin interface to the package mapview, producing a dynamic plot that harnesses the power of package mapview. This function accepts all parameters that can be fed to the function mapview in the package mapview, such as layer.name, color, etc."
                          if(format=="line")
                          {
                            mapview(.self$as_sfc_linestring(), ...=...)
@@ -118,7 +126,7 @@ xtrack <- setRefClass("xtrack",
                        #     return(t2)
                        # },
                        as_spatial_lines_dataframe=function()
-                       {
+                       {"Provides a SpatialLinesDataFrame representation of the track. This is an object type in the sp package, an important R package for spatial analysis."
                         the_spatial_lines <- SpatialLines(list(Lines(Line(cbind(trackpoints$lon,trackpoints$lat)), ID="a")))
                         emptyData <- data.frame(matrix(0, ncol = 2, nrow = length(the_spatial_lines)))
                         the_spatialLinesDataFrame <- SpatialLinesDataFrame(sl=the_spatial_lines, data=emptyData, match.ID=FALSE)
@@ -126,8 +134,9 @@ xtrack <- setRefClass("xtrack",
                        },
                        as_raster_of_habitat_visited_binary=function(cell_size_m=10, xmin=NULL, xmax=NULL,ymin=NULL,ymax=NULL,selected_trackpoints="all")
                        {
-                         #this function calculates and saves a raster of habitat visitation,
-                         #producing a binary measure indicating visited or not.
+
+                         "Raster analysis to categorize places on the landscape as visited or not visited. This is a binary raster representation of the xtrack, where cells that are visited / intersected are given value 1, and those not visited given value 0. The length and width of the raster cells in meters is determined by the parameter cell_size_m and is by default 10. This function accepts a parameter called selected_trackpoints which determines which of the trackpoints are rasterized. The acceptable values are all, in_camp, or out_of_camp. The default is all, as used in Wood et al. 2021."
+
                          the_extent <- NA
 
 
@@ -166,8 +175,8 @@ xtrack <- setRefClass("xtrack",
                        },
                        as_raster_of_habitat_visited_counts=function(cell_size_m=10, xmin=NULL, xmax=NULL,ymin=NULL,ymax=NULL, selected_trackpoints="all")
                        {
-                         #this function calculates and saves a raster of habitat visitation,
-                         #producing a binary measure indicating visited or not.
+                         "Raster analysis to categorize variable visitation intensity of places on the landscape. This is a integer raster representation of the xtrack, where the count for each cell represents the number of trackpoints that fell within that cell's boundaries. Assuming that trackpoints are logged at regular time intervals, this raster provides a measure of the amount of time spent within each cell. un-visited cells are given value 0. As with the binary raster representation, the length and width of the raster cells in meters is determined by the parameter cell_size_m and is by default 10."
+
                          the_extent <- NA
 
                          if(selected_trackpoints=="all")
@@ -215,17 +224,15 @@ xtrack <- setRefClass("xtrack",
                          return(.self$sfc_linestring_object[1,1])
                        },
                        get_trackpoints = function()
-                       {
+                       {"Returns a data frame of trackpoints. This representation has more columns / more information and annotations that the 'raw' data used to construct an xtrack. This includes columns for the time between each trackpoint, meters traveled between trackpoints, speed of travel between trackpoints, and the utm coordinates of each trackpoint."
                          return(trackpoints)
                        },
                        get_out_of_camp_bout_records = function()
-                       {
+                       {"Segmentation of travel into bouts of out of camp travel. An out of camp bout is when an individual leaves camp, travels some distance, and then returns to camp."
                          return(out_of_camp_bout_records)
                        },
                        get_longest_bout_trackpoints = function()
-                       {
-                         #out_of_camp_bout_records <- xt_1$get_out_of_camp_bout_records()
-                         #trackpoints <- xt_1$trackpoints
+                       { "Get the trackpoints of the longest duration out of camp bout"
 
 
                          if(nrow(out_of_camp_bout_records)==0)
@@ -247,20 +254,22 @@ xtrack <- setRefClass("xtrack",
                          return(trackpoints_of_lb)
                        },
                        get_outbound_sinuosity = function()
-                       {
+                       {"Get outbound sinuosity following the methods of Wood et al. 2021"
                          return(outbound_sinuosity)
                        },
                        get_inbound_sinuosity = function()
-                       {
+                       {"Get inbound sinuosity following the methods of Wood et al. 2021"
                          return(inbound_sinuosity)
                        },
                        get_sinuosity_measures=function()
                        {
+                         "Get more measures related to inbound and outbound sinuosity. These include: The length (km) of the outbound and inbound segments as traveled; the length (km) of the 'as the crow flies' distance from the point of leaving camp to the most distant point (sp_distance_outbound_km).
+; The length of the 'as the crow flies' distance from the most distant point to the point of returning to camp (sp_distance_inbound_km); The mean sinuosity of the inbound and outbound segments; The trackpoint_id of the most distant (from camp centroid) trackpoint."
                          return_value <- data.frame(cbind(length_outbound_section_km,length_inbound_section_km, sp_distance_outbound_km,sp_distance_inbound_km,outbound_sinuosity,inbound_sinuosity,mean_sinuosity, furthest_trackpoint_id))
                          return_value
                        },
                        plot_nice_map_of_track=function(the_title="", line_color="black")
-                       {
+                       {"A call to plot_nice_map_of_track creates a 'nice map' that harnesses ggplot2 functions. It is a clean plot of the xtrack's travel path with a simple ggplot2 black and white theme, a customized scale bar, and some metadata displayed in the subtitle area. This function accepts parameters for a title (the_title), and the color of the line representing the xtrack (line_color)."
 
 
                          dist_m <- track_length_km*1000#track_length_km <- ti$track_length_km
@@ -348,6 +357,7 @@ xtrack <- setRefClass("xtrack",
                        },
                        plot_sinuosity_map=function(the_title="Sinuosity map")
                        {
+                         "A call to plot_sinuosity_map creates a visual representation of the outbound travel segment (red), the inbound segment (blue),  travel in camp or during shorter out of camp segments (green), the 'as the crow flies' shortest path segments used to  calculate sinuosity measures (grey dashed line). The trackpoint that is maximally distant from the camp centroid is plotted  in yellow. The sinuosity measures themselves are plotted in the subtitle and the plot accepts a parameter for the map title."
                          #t<-track(3149)
                          #trackpoints <- t$trackpoints
                          #out_of_camp_bout_records <- t$out_of_camp_bout_records
@@ -593,7 +603,7 @@ xtrack <- setRefClass("xtrack",
                          }
                        },
                        has_data_for_sinuosity_measures = function()
-                       {
+                       {"Test if the xtrack has data sufficient to enable sinuosity calculations of the manner carried out in Wood et al. 2021."
                          return(has_bout_appropriate_for_sinuosity_measures==1)
                        },
                        set_bout_records = function()
@@ -924,7 +934,7 @@ xtrack <- setRefClass("xtrack",
 
                       },
                       write_gpx_file=function(gpx_file_name="test.gpx", gpx_track_name="test")
-                      {
+                      { "writes a GPX file representation of the track. GPX files are widely used in GIS and GPS applications."
                         #trackpoints <- trackpoints_2
                         elevation = trackpoints$elevation_m
                         lat = trackpoints$lat
@@ -958,6 +968,7 @@ xtrack <- setRefClass("xtrack",
                       },
                       write_kml_file=function(kml_file_name="test.kml", kml_track_name="test", color="red", lwd=3, kml_name="", kml_description="")
                       {
+                        "Writes a KML file representation of the xtrack. KML files are used in Google Earth and elsewhere."
                         # kml_file_name="test.kml"
                         # kml_track_name="test"
                         # color="red"
