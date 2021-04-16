@@ -28,7 +28,8 @@
 #' @field trackpoints A dataframe of trackpoints
 #' @field track_length_km The length of the trajectory in km
 #' @field track_duration_hr the total duration of the xtrack in hours
-#' @export
+#' @export xtrack
+#' @exportClass xtrack
 xtrack <- setRefClass("xtrack",
                      fields = list(pk_track_id="numeric", int_track_id="numeric", int_res_sec="numeric", person_id="character", age="numeric", sex="character",
                                    trackpoints="data.frame", out_of_camp_bout_records="data.frame",
