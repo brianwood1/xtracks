@@ -51,7 +51,7 @@ xtrack <- setRefClass("xtrack",
                          pts = matrix(0, length(lon), 2)
                          pts[,1] = lon
                          pts[,2] = lat
-                         ls = st_sfc(st_linestring(pts), crs = 4326)
+                         ls = sf::st_sfc(st_linestring(pts), crs = 4326)
                          sfc_linestring_object <<- data.frame(ls)
 
                          track_length_km <<- round(LineLength(pts, longlat=TRUE, sum=TRUE), 3)
