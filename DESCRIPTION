@@ -1,0 +1,22 @@
+Package: xtracks
+Type: Package
+Title: Xtracks: Software for Analysis of Movement and Socio-Spatial Patterns
+Version: 0.1.0
+Author: Brian Wood
+Maintainer: Brian Wood <brianwood1@gmail.com>
+Description: Software for Spatial and Social Analysis. This software is meant for the analysis of tracks that record the movement of individuals through space. It produces measures of individual and collective movement and social interaction. These measures include daily distances traveled, step count estimates, raster measures of landscape use, inter-individual proximities, sinuosity of travel paths, rates of habitat exploration, and social network metrics. It is written to be data source agnostic, and can handle either field data or simulated data generated from an agent based model.  Some custom data importation routines are also provided for GPS devices. 
+License: Attribution required
+Encoding: UTF-8
+LazyData: true
+Imports:
+    raster,
+    sp,
+    sf,
+    geosphere,
+    ggplot2,
+    ggsn,
+    maptools,
+    mapview
+RoxygenNote: 7.1.1
+Depends: 
+    R (>= 2.10)
