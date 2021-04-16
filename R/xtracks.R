@@ -28,6 +28,7 @@
 #' @field trackpoints A dataframe of trackpoints
 #' @field track_length_km The length of the trajectory in km
 #' @field track_duration_hr the total duration of the xtrack in hours
+#' @importMethodsFrom sf st_sfc
 #' @export xtrack
 #' @exportClass xtrack
 xtrack <- setRefClass("xtrack",
