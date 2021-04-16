@@ -59,6 +59,7 @@ xtrack <- setRefClass("xtrack",
 
                          trackpoints$seconds_since_prior_trackpoint <<- c(0,diff(trackpoints$unix_time))
                          trackpoints$meters_from_prior_trackpoint <<- 0
+                         #this needs to show up
                          distances <- geosphere::distHaversine(p1=cbind(trackpoints$lon[1:(nrow(trackpoints)-1)], trackpoints$lat[1:(nrow(trackpoints)-1)]), p2=cbind(trackpoints$lon[2:nrow(trackpoints)], trackpoints$lat[2:nrow(trackpoints)]))
                          trackpoints$meters_from_prior_trackpoint <<- c(0,distances)
                          trackpoints$speed_m_s_from_prior_trackpoint <<- trackpoints$meters_from_prior_trackpoint/trackpoints$seconds_since_prior_trackpoint
