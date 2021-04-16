@@ -80,8 +80,8 @@ xtrack <- setRefClass("xtrack",
                          utm_proj_args <<- paste0("+init=epsg:",utm_epsg)
 
                          #utm <- "+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
-                         coordinates(tps) = cbind("lon", "lat")
-                         proj4string(tps) <- rgdal::CRS(lat_lon_args)
+                         sp::coordinates(tps) = cbind("lon", "lat")
+                         sp::proj4string(tps) <- rgdal::CRS(lat_lon_args)
                          #lines <- SpatialLines(list(Lines(list(Line(tps)), "id")))
                          #proj4string(lines) <- CRS(lat_lon_args)
                          trackpoints_utm <- sp::spTransform(tps,  rgdal::CRS(utm_proj_args))
