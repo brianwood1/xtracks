@@ -51,7 +51,7 @@ xtrack <- setRefClass("xtrack",
                          pts = matrix(0, length(lon), 2)
                          pts[,1] = lon
                          pts[,2] = lat
-                         ls = sf::st_sfc(st_linestring::st_linestring(pts), crs = 4326)
+                         ls = sf::st_sfc(sf::st_linestring(pts), crs = 4326)
                          sfc_linestring_object <<- data.frame(ls)
 
                          track_length_km <<- round(sp::LineLength(pts, longlat=TRUE, sum=TRUE), 3)
@@ -80,13 +80,13 @@ xtrack <- setRefClass("xtrack",
 
                          #utm <- "+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
                          coordinates(tps) = cbind("lon", "lat")
-                         proj4string(tps) <- CRS(lat_lon_args)
+                         proj4string(tps) <- rgdal::CRS(lat_lon_args)
                          #lines <- SpatialLines(list(Lines(list(Line(tps)), "id")))
                          #proj4string(lines) <- CRS(lat_lon_args)
-                         trackpoints_utm <- spTransform(tps,  CRS(utm_proj_args))
+                         trackpoints_utm <- sp::spTransform(tps,  rgdal::CRS(utm_proj_args))
                           #head(coordinates(trackpoints_utm))
-                         trackpoints$utm_x <<- coordinates(trackpoints_utm)[,1]
-                         trackpoints$utm_y <<- coordinates(trackpoints_utm)[,2]
+                         trackpoints$utm_x <<- sp::coordinates(trackpoints_utm)[,1]
+                         trackpoints$utm_y <<- sp::coordinates(trackpoints_utm)[,2]
                          range_utm_x <- range(trackpoints$utm_x)
                          range_utm_y <- range(trackpoints$utm_y)
                          min_x_utm <<- range_utm_x[1]
@@ -111,11 +111,11 @@ xtrack <- setRefClass("xtrack",
                          "# A call to as_mapview is a thin interface to the package mapview, producing a dynamic plot that harnesses the power of package mapview. This function accepts all parameters that can be fed to the function mapview in the package mapview, such as layer.name, color, etc."
                          if(format=="line")
                          {
-                           mapview(.self$as_sfc_linestring(), ...=...)
+                           mapview::mapview(.self$as_sfc_linestring(), ...=...)
 
                          } else if (format=="points")
                          {
-                           return(mapview(x=data.frame(lon=trackpoints$lon, lat=trackpoints$lat), xcol=c("lon"), ycol=c("lat"), crs=c("WGS84"), ...=...))
+                           return(mapview::mapview(x=data.frame(lon=trackpoints$lon, lat=trackpoints$lat), xcol=c("lon"), ycol=c("lat"), crs=c("WGS84"), ...=...))
                          }
 
                        },
@@ -128,9 +128,9 @@ xtrack <- setRefClass("xtrack",
                        # },
                        as_spatial_lines_dataframe=function()
                        {"Provides a SpatialLinesDataFrame representation of the track. This is an object type in the sp package, an important R package for spatial analysis."
-                        the_spatial_lines <- SpatialLines(list(Lines(Line(cbind(trackpoints$lon,trackpoints$lat)), ID="a")))
+                        the_spatial_lines <- sp::SpatialLines(list(Lines(Line(cbind(trackpoints$lon,trackpoints$lat)), ID="a")))
                         emptyData <- data.frame(matrix(0, ncol = 2, nrow = length(the_spatial_lines)))
-                        the_spatialLinesDataFrame <- SpatialLinesDataFrame(sl=the_spatial_lines, data=emptyData, match.ID=FALSE)
+                        the_spatialLinesDataFrame <- sp::SpatialLinesDataFrame(sl=the_spatial_lines, data=emptyData, match.ID=FALSE)
                         return(the_spatialLinesDataFrame)
                        },
                        as_raster_of_habitat_visited_binary=function(cell_size_m=10, xmin=NULL, xmax=NULL,ymin=NULL,ymax=NULL,selected_trackpoints="all")
@@ -161,14 +161,14 @@ xtrack <- setRefClass("xtrack",
                            xmax <- max(selected_trackpoints$utm_x)
                            ymin <- min(selected_trackpoints$utm_y)
                            ymax <- max(selected_trackpoints$utm_y)
-                           the_extent <- extent(xmin, xmax, ymin, ymax)
+                           the_extent <- raster::extent(xmin, xmax, ymin, ymax)
                          } else {
-                           the_extent <- extent(xmin, xmax, ymin, ymax)
+                           the_extent <- raster::extent(xmin, xmax, ymin, ymax)
                          }
 
-                          tp_r <- raster(the_extent)
-                          res(tp_r) <- cell_size_m
-                          rasterized_trackpoints <- rasterize(x=selected_trackpoints[c("utm_x", "utm_y")], y=tp_r, fun='count')
+                          tp_r <- raster::raster(the_extent)
+                          raster::res(tp_r) <- cell_size_m
+                          rasterized_trackpoints <- raster::rasterize(x=selected_trackpoints[c("utm_x", "utm_y")], y=tp_r, fun='count')
                           cells_visited_today <- rasterized_trackpoints>0
                           cells_visited_today[is.na(cells_visited_today[])] <- 0
 
@@ -200,15 +200,15 @@ xtrack <- setRefClass("xtrack",
                            xmax <- max(selected_trackpoints$utm_x)
                            ymin <- min(selected_trackpoints$utm_y)
                            ymax <- max(selected_trackpoints$utm_y)
-                           the_extent <- extent(xmin, xmax, ymin, ymax)
+                           the_extent <- raster::extent(xmin, xmax, ymin, ymax)
                          } else {
-                           the_extent <- extent(xmin, xmax, ymin, ymax)
+                           the_extent <- raster::extent(xmin, xmax, ymin, ymax)
                          }
 
-                         tp_r <- raster(the_extent)
-                         res(tp_r) <- cell_size_m
+                         tp_r <- raster::raster(the_extent)
+                         raster::res(tp_r) <- cell_size_m
 
-                         rasterized_trackpoints <- rasterize(x=selected_trackpoints[c("utm_x", "utm_y")], y=tp_r, fun='count')
+                         rasterized_trackpoints <- raster::rasterize(x=selected_trackpoints[c("utm_x", "utm_y")], y=tp_r, fun='count')
                          rasterized_trackpoints[is.na(rasterized_trackpoints[])] <- 0
                          return(rasterized_trackpoints)
                        },
@@ -301,7 +301,7 @@ xtrack <- setRefClass("xtrack",
                          footer_fraction <- .1
                          footer_km <- new_dist_y_axis_km*footer_fraction
                          footer_m <- footer_km*1000
-                         ll_with_footer <- destPoint(p=c(x_lim[1], y_lim[1]), b=180, d=footer_m)
+                         ll_with_footer <- geosphere::destPoint(p=c(x_lim[1], y_lim[1]), b=180, d=footer_m)
                          y_min_with_footer <- ll_with_footer[2]
                          y_lim[1] <- y_min_with_footer
                          res <- equalizeAxesLimits(x_lim, y_lim)
@@ -313,7 +313,7 @@ xtrack <- setRefClass("xtrack",
                          map_width_km <- map_width_m/1000
 
                          right_nudge_distance_m <- map_width_m*.05
-                         scale_lon_nudged_right <- destPoint(p=c(x_lim[1], y_lim[1]), b=90, d=right_nudge_distance_m)[1]
+                         scale_lon_nudged_right <- geosphere::destPoint(p=c(x_lim[1], y_lim[1]), b=90, d=right_nudge_distance_m)[1]
                          scale_lon <- scale_lon_nudged_right
                          scale_lat <- y_lim[1]
 
@@ -459,21 +459,21 @@ xtrack <- setRefClass("xtrack",
                        create_scale_bar = function(lon,lat,distance_lon,distance_lat,distance_legend, dist_units = "km")
                        {
                          # First rectangle
-                         bottom_right <- gcDestination(lon = lon, lat = lat, bearing = 90, dist = distance_lon, dist.units = dist_units, model = "WGS84")
+                         bottom_right <- maptools::gcDestination(lon = lon, lat = lat, bearing = 90, dist = distance_lon, dist.units = dist_units, model = "WGS84")
 
-                         topLeft <- gcDestination(lon = lon, lat = lat, bearing = 0, dist = distance_lat, dist.units = dist_units, model = "WGS84")
+                         topLeft <- maptools::gcDestination(lon = lon, lat = lat, bearing = 0, dist = distance_lat, dist.units = dist_units, model = "WGS84")
                          rectangle <- cbind(lon=c(lon, lon, bottom_right[1,"long"], bottom_right[1,"long"], lon),
                                             lat = c(lat, topLeft[1,"lat"], topLeft[1,"lat"],lat, lat))
                          rectangle <- data.frame(rectangle, stringsAsFactors = FALSE)
 
                          # Second rectangle t right of the first rectangle
-                         bottom_right2 <- gcDestination(lon = lon, lat = lat, bearing = 90, dist = distance_lon*2, dist.units = dist_units, model = "WGS84")
+                         bottom_right2 <- maptools::gcDestination(lon = lon, lat = lat, bearing = 90, dist = distance_lon*2, dist.units = dist_units, model = "WGS84")
                          rectangle2 <- cbind(lon = c(bottom_right[1,"long"], bottom_right[1,"long"], bottom_right2[1,"long"], bottom_right2[1,"long"], bottom_right[1,"long"]),
                                              lat=c(lat, topLeft[1,"lat"], topLeft[1,"lat"], lat, lat))
                          rectangle2 <- data.frame(rectangle2, stringsAsFactors = FALSE)
 
                          # Now let's deal with the text
-                         on_top <- gcDestination(lon = lon, lat = lat, bearing = 0, dist = distance_legend, dist.units = dist_units, model = "WGS84")
+                         on_top <- maptools::gcDestination(lon = lon, lat = lat, bearing = 0, dist = distance_legend, dist.units = dist_units, model = "WGS84")
                          on_top2 <- on_top3 <- on_top
                          on_top2[1,"long"] <- bottom_right[1,"long"]
                          on_top3[1,"long"] <- bottom_right2[1,"long"]
