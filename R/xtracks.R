@@ -28,7 +28,6 @@
 #' @field trackpoints A dataframe of trackpoints
 #' @field track_length_km The length of the trajectory in km
 #' @field track_duration_hr the total duration of the xtrack in hours
-#' @importMethodsFrom sf st_sfc
 #' @export xtrack
 #' @exportClass xtrack
 xtrack <- setRefClass("xtrack",
@@ -52,10 +51,10 @@ xtrack <- setRefClass("xtrack",
                          pts = matrix(0, length(lon), 2)
                          pts[,1] = lon
                          pts[,2] = lat
-                         ls = sf::st_sfc(st_linestring(pts), crs = 4326)
+                         ls = sf::st_sfc(st_linestring::st_linestring(pts), crs = 4326)
                          sfc_linestring_object <<- data.frame(ls)
 
-                         track_length_km <<- round(LineLength(pts, longlat=TRUE, sum=TRUE), 3)
+                         track_length_km <<- round(sp::LineLength(pts, longlat=TRUE, sum=TRUE), 3)
 
                          #print(paste0("the length from LineLength: ", track_length_km))
                          trackpoints$seconds_since_prior_trackpoint <<- c(0,diff(trackpoints$unix_time))
