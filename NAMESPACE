@@ -3,4 +3,3 @@
 export(get_hab_exp_across_days)
 export(xtrack)
 exportClasses(xtrack)
-importMethodsFrom(sf,st_sfc)
