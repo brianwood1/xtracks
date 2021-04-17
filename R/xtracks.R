@@ -99,8 +99,7 @@ xtrack <- setRefClass("xtrack",
                          set_bout_records()
                          set_sinuosity_indices()
 
-                         #print("finished set_sinuosity_indices")
-                         #print("calling setBearingsAlongTrack")
+
 
                          #to do
                          #set_bearings_along_track()
