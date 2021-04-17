@@ -679,7 +679,7 @@ xtrack <- setRefClass("xtrack",
                          if(nrow(bout_records)==0)
                          {
                            #out_of_camp_bout_records <<- NULL
-                           print("Warning: In this track, there were no bouts of out of camp travel by which to calculate sinuosity of out-of-camp travel")
+                           #print("Warning: In this track, there were no bouts of out of camp travel by which to calculate sinuosity of out-of-camp travel")
                            return()
                          }
 
