@@ -3,7 +3,7 @@ title: "Using xtracks"
 author: "Brian Wood"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{using xtracks}
+  %\VignetteIndexEntry{Using xtracks}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,22 +15,22 @@ knitr::opts_chunk$set(
 )
 ```
 
-### Installing xtracks
+## Installing xtracks
 
 ```{r, eval=FALSE}
 install.packages("devtools")
 devtools::install_github("brianwood1/xtracks")
 ```
 
-### Load xtracks
+## Load xtracks package
 
 ```{r}
 library(xtracks)
 ```
 
-### load some trackpoint / spatiotemporal data
+## Load some spatiotemporal data
 
-First you need to load some trackpoint data into a dataframe. For demonstration purposes, the xtracks package comes with two dataframes named <code>d1</code> and <code>d2</code> that are appropriately formatted. The structure of the data can be seen below. 
+First you need to load some spatiotemporal data into a dataframe. For demonstration purposes, the xtracks package comes with two dataframes named <code>d1</code> and <code>d2</code> that are appropriately formatted. The structure of the data can be seen below. 
 
 ```{r, load_data, echo=TRUE}
 head(d1)
@@ -38,7 +38,7 @@ head(d1)
 
 As you can see, the data xtracks objects are based on includes the sort that come from GPS devices (lat, lon, elevation, time stamp, elevation) but also include a 'distance from camp' measure for all trackpoints and an 'in camp' flag. These later values are critical for analyses performed by xtracks and should be computed as an initial data processing step. 
 
-### construct an xtracks object
+## Construct an xtracks object
 
 To construct an xtrack object, one must specify:
 
@@ -57,10 +57,19 @@ Assuming these initial data are in place, the code to construct an xtrack object
 
 ```{r, construct_xtracks}
 
-xt_1 <- new('xtrack', lat=d1$lat, lon=d1$lon, elevation_m=d1$elevation_m, in_camp=d1$in_camp, unix_time=d1$unix_time, distance_from_camp_m=d1$distance_from_camp_m, utm_epsg=32736)
-
-
 xt_1 <- xtrack(lat=d1$lat, lon=d1$lon, elevation_m=d1$elevation_m, in_camp=d1$in_camp, unix_time=d1$unix_time, distance_from_camp_m=d1$distance_from_camp_m, utm_epsg=32736)
 xt_2 <- xtrack(lat=d2$lat, lon=d2$lon, elevation_m=d2$elevation_m, in_camp=d2$in_camp, unix_time=d2$unix_time, distance_from_camp_m=d2$distance_from_camp_m, utm_epsg=32736)
+```
+
+## View the xtrack
+
+A nice dynamic map of the xtrack can be created using mapview. More visualization options will be highlighted at the end of the vignette.
+
+```{r, eval=FALSE}
+xt_1$as_mapview()
+```
+
+```{r, echo=FALSE}
+knitr::include_graphics('mapview_example.png')
 ```
 

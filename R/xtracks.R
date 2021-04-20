@@ -1,29 +1,4 @@
-#library(devtools)
-#library(testthat)
-#library(usethis)
-#library(roxygen2)
-#library(knitr)
-#library(rmarkdown)
-# if("sp" %in% rownames(installed.packages()) == FALSE) {install.packages("sp")}
-# if("sf" %in% rownames(installed.packages()) == FALSE) {install.packages("sf")}
-# if("geosphere" %in% rownames(installed.packages()) == FALSE) {install.packages("geosphere")}
-# if("ggplot2" %in% rownames(installed.packages()) == FALSE) {install.packages("ggplot2")}
-# if("raster" %in% rownames(installed.packages()) == FALSE) {install.packages("raster")}
-# if("ggsn" %in% rownames(installed.packages()) == FALSE) {install.packages("ggsn")}
-# if("maptools" %in% rownames(installed.packages()) == FALSE) {install.packages("maptools")}
-# if("mapview" %in% rownames(installed.packages()) == FALSE) {install.packages("mapview")}
-#
- # library(sp)
- # library(sf)
- # library(geosphere)
- # library(ggplot2)
- # library(raster)
- # library(ggsn)
- # library(maptools)
- # library(mapview)
-
-
-#' An xtrack object represents the movement of one individual on one day.
+#' An xtrack object represents the movement of one individual throughout one day.
 #'
 #' @field trackpoints A dataframe of trackpoints
 #' @field track_length_km The length of the trajectory in km
@@ -609,11 +584,6 @@ xtrack <- setRefClass("xtrack",
                        },
                        set_bout_records = function()
                        {
-                         #for testing
-                         # d <- read.csv("data/track_data.csv", stringsAsFactors=F)
-                         # xt_1 <- xtrack(lat=d$lat, lon=d$lon, elevation_m=d$elevation_m, in_camp=d$in_camp, unix_time=d$unix_time, distance_from_camp_m=d$distance_from_camp_m)
-                         # trackpoints <- xt_1$trackpoints
-                         # trackpoints$bout_number <- "in camp"
 
                          trackpoints$bout_number <<- "in camp"
 
@@ -631,28 +601,6 @@ xtrack <- setRefClass("xtrack",
                                                     max_dist_unix_time=numeric(100),
                                                     total_length_of_bout_m=numeric(100),
                                                     stringsAsFactors=FALSE)
-#
-#                          bout_records$track_id <- pk_track_id
-#                          #bout_records$track_id <- t$pk_track_id
-#
-#                          bout_records$person_id <- person_id
-#                          #bout_records$person_id <- t$person_id
-#
-#                          bout_records$age <- age
-#                          #bout_records$age <- t$age
-#
-#                          bout_records$sex <- sex
-#                          #bout_records$sex <- t$sex
-#
-#                          bout_records$camp <- camp
-#                          #bout_records$camp <- t$camp
-#
-#                          bout_records$date <- date
-#                          #bout_records$date <- t$date
-#                          #trackpoints <- suppressWarnings(dbGetQuery(con, paste("SELECT lat, lon, distance_from_camp_m, unix_time, in_camp, pk_trackpoint_id FROM trackpoint WHERE fk_track_id='", track_id, "' ORDER BY unix_time", sep="")))
-#                          #head(trackpoints)
-#
-#                          #table(trackpoints$in_camp)
 
                          bout_record_index <- 1
 
