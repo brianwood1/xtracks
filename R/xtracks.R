@@ -229,6 +229,17 @@ xtrack <- setRefClass("xtrack",
                          trackpoints_of_lb <- trackpoints[during_longest_bout,]
                          return(trackpoints_of_lb)
                        },
+                       get_spatially_shifted_trackpoints = function(new_mean_lat=-3.618489, new_mean_lon=35.06232)
+                       { "this function will return your trackpoints such that their mean lat and lon are the values you specify. Useful for sharing sensitive data."
+                           current_mean_lat <- mean(trackpoints$lat)
+                           current_mean_lon <- mean(trackpoints$lon)
+                           lat_shift <- new_mean_lat - current_mean_lat
+                           lon_shift <- new_mean_lon - current_mean_lon
+                           shifted_trackpoints <- trackpoints
+                           shifted_trackpoints$lat <- shifted_trackpoints$lat + lat_shift
+                           shifted_trackpoints$lon <- shifted_trackpoints$lon + lon_shift
+                           return(shifted_trackpoints)
+                       },
                        get_outbound_sinuosity = function()
                        {"Get outbound sinuosity following the methods of Wood et al. 2021"
                          return(outbound_sinuosity)
