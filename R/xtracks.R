@@ -517,11 +517,11 @@ xtrack <- setRefClass("xtrack",
 
                              latlong = "+proj=longlat +datum=WGS84 +ellps=WGS84"
                              utm <- "+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
-                             coordinates(tps) = cbind("lon", "lat")
-                             proj4string(tps) <- CRS(latlong)
+                             sp::coordinates(tps) = cbind("lon", "lat")
+                             sp::proj4string(tps) <- sp::CRS(latlong)
                              lines <- SpatialLines(list(Lines(list(Line(tps)), "id")))
-                             proj4string(lines) <- CRS(latlong)
-                             trackpoints_utm <- spTransform(lines,  CRS(utm))
+                             proj4string(lines) <- sp::CRS(latlong)
+                             trackpoints_utm <- spTransform(lines,  sp::CRS(utm))
                              #class(trackpoints_utm)
 
                              tp_e <- extent(trackpoints_utm)
@@ -542,11 +542,11 @@ xtrack <- setRefClass("xtrack",
 
                              latlong = "+proj=longlat +datum=WGS84 +ellps=WGS84"
                              utm <- "+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
-                             coordinates(tps) = cbind("lon", "lat")
-                             proj4string(tps) <- CRS(latlong)
+                             sp::coordinates(tps) = cbind("lon", "lat")
+                             sp::proj4string(tps) <- sp::CRS(latlong)
                              lines <- SpatialLines(list(Lines(list(Line(tps)), "id")))
-                             proj4string(lines) <- CRS(latlong)
-                             trackpoints_utm <- spTransform(lines,  CRS(utm))
+                             proj4string(lines) <- sp::CRS(latlong)
+                             trackpoints_utm <- spTransform(lines,  sp::CRS(utm))
                              tp_e <- extent(trackpoints_utm)
                              #plot(trackpoints_utm, add=TRUE)
                              tp_r <- raster(cr_e)
@@ -570,11 +570,11 @@ xtrack <- setRefClass("xtrack",
 
                            latlong = "+proj=longlat +datum=WGS84 +ellps=WGS84"
                            utm <- "+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
-                           coordinates(tps) = cbind("lon", "lat")
-                           proj4string(tps) <- CRS(latlong)
+                           sp::coordinates(tps) = cbind("lon", "lat")
+                           sp::proj4string(tps) <- sp::CRS(latlong)
                            lines <- SpatialLines(list(Lines(list(Line(tps)), "id")))
-                           proj4string(lines) <- CRS(latlong)
-                           trackpoints_utm <- spTransform(lines,  CRS(utm))
+                           proj4string(lines) <- sp::CRS(latlong)
+                           trackpoints_utm <- spTransform(lines,  sp::CRS(utm))
                            #class(trackpoints_utm)
 
                            tp_e <- extent(trackpoints_utm)
@@ -846,8 +846,8 @@ xtrack <- setRefClass("xtrack",
 
                             } else{
                               #pp("sinuosity calculated successfully")
-                              length_outbound_section_km <<- round(LineLength(as.matrix(cbind(outbound_section$lon, outbound_section$lat)), longlat=TRUE, sum=TRUE), 2)
-                              length_inbound_section_km <<- round(LineLength(as.matrix(cbind(inbound_section$lon, inbound_section$lat)), longlat=TRUE, sum=TRUE), 2)
+                              length_outbound_section_km <<- round(sp::LineLength(as.matrix(cbind(outbound_section$lon, outbound_section$lat)), longlat=TRUE, sum=TRUE), 2)
+                              length_inbound_section_km <<- round(sp::LineLength(as.matrix(cbind(inbound_section$lon, inbound_section$lat)), longlat=TRUE, sum=TRUE), 2)
                               start_trackpoint_lat <- start_trackpoint_of_bout$lat
                               start_trackpoint_lon <- start_trackpoint_of_bout$lon
                               furthest_trackpoint_lat <- furthest_trackpoint$lat
@@ -1062,8 +1062,8 @@ get_hab_exp_across_days<-function(list_of_xtracks, cell_size_m=10)
 equalizeAxesLimits<- function(x_lim, y_lim)
 {
 
-  x_axis_meters <- distm(x = c(x_lim[1], y_lim[1]), y=c(x_lim[2], y_lim[1]))[1,1]
-  y_axis_meters <- distm(x= c(x_lim[1], y_lim[1]), y=c(x_lim[1], y_lim[2]))[1,1]
+  x_axis_meters <- geosphere::distm(x = c(x_lim[1], y_lim[1]), y=c(x_lim[2], y_lim[1]))[1,1]
+  y_axis_meters <- geosphere::distm(x= c(x_lim[1], y_lim[1]), y=c(x_lim[1], y_lim[2]))[1,1]
 
   new_min_x <- 0
   new_max_x <- 0
@@ -1077,19 +1077,19 @@ equalizeAxesLimits<- function(x_lim, y_lim)
   if(x_axis_meters<=y_axis_meters)
   {
     mid_x <- (x_lim[1]+x_lim[2])/2
-    new_min_x <- destPoint(p = c(mid_x, y_lim[1]), b = 270, d = y_axis_meters/2)[1]
-    new_max_x <- destPoint(p = c(mid_x, y_lim[1]), b = 90, d = y_axis_meters/2)[1]
-    new_x_axis_distance_m <- distm(c(new_min_x, y_lim[1]), c(new_max_x, y_lim[1]))[1,1]
+    new_min_x <- geosphere::destPoint(p = c(mid_x, y_lim[1]), b = 270, d = y_axis_meters/2)[1]
+    new_max_x <- geosphere::destPoint(p = c(mid_x, y_lim[1]), b = 90, d = y_axis_meters/2)[1]
+    new_x_axis_distance_m <- geosphere::distm(c(new_min_x, y_lim[1]), c(new_max_x, y_lim[1]))[1,1]
     new_y_axis_distance_m <- y_axis_meters
     new_x_lim <- c(new_min_x, new_max_x)
     new_y_lim <- y_lim
   } else if(x_axis_meters>y_axis_meters) {
 
     mid_y <- (y_lim[1]+y_lim[2])/2
-    new_min_y <- destPoint(p=c(x_lim[1], mid_y), b=180, d=x_axis_meters/2)[2]
-    new_max_y <- destPoint(p=c(x_lim[1], mid_y), b=0, d=x_axis_meters/2)[2]
+    new_min_y <- geosphere::destPoint(p=c(x_lim[1], mid_y), b=180, d=x_axis_meters/2)[2]
+    new_max_y <- geosphere::destPoint(p=c(x_lim[1], mid_y), b=0, d=x_axis_meters/2)[2]
     new_x_axis_distance_m <- x_axis_meters
-    new_y_axis_distance_m <- distm(c(x_lim[1], new_min_y), c(x_lim[1], new_max_y))[1,1]
+    new_y_axis_distance_m <- geosphere::distm(c(x_lim[1], new_min_y), c(x_lim[1], new_max_y))[1,1]
     new_x_lim <- x_lim
     new_y_lim <- c(new_min_y, new_max_y)
   }
