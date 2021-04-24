@@ -857,8 +857,8 @@ xtrack <- setRefClass("xtrack",
                               start_coords <- as.matrix(cbind(lon=start_trackpoint_of_bout$lon, lat=start_trackpoint_of_bout$lat))
                               furthest_coords <- as.matrix(cbind(furthest_trackpoint$lon, lat=furthest_trackpoint$lat))
                               end_coords <- as.matrix(cbind(lon=end_trackpoint_of_bout$lon, lat=end_trackpoint_of_bout$lat))
-                              sp_distance_outbound_km <<- spDistsN1(start_coords,furthest_coords, longlat=TRUE)
-                              sp_distance_inbound_km <<- spDistsN1(furthest_coords,end_coords, longlat=TRUE)
+                              sp_distance_outbound_km <<- sp::spDistsN1(start_coords,furthest_coords, longlat=TRUE)
+                              sp_distance_inbound_km <<- sp::spDistsN1(furthest_coords,end_coords, longlat=TRUE)
                               outbound_sinuosity <<- length_outbound_section_km/sp_distance_outbound_km
                               inbound_sinuosity <<- length_inbound_section_km/sp_distance_inbound_km
                               mean_sinuosity <<- mean(c(outbound_sinuosity,inbound_sinuosity))
