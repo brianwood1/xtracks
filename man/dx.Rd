@@ -3,7 +3,7 @@
 \docType{data}
 \name{dx}
 \alias{dx}
-\title{Individual GPS trajectory dataset 1}
+\title{Individual GPS trajectory dataset}
 \format{
 A data frame with 8260 rows and 6 variables:
 \describe{
@@ -19,7 +19,7 @@ A data frame with 8260 rows and 6 variables:
 dx
 }
 \description{
-Demonstration GPS data formatted in manner to facilitate the construction of an xtrack object and demonstration of package xtracks features.  
+Demonstration GPS data formatted in manner to facilitate the construction of an xtrack object and demonstration of package xtracks features.
 For privacy concerns, the raw spatial data have been shifted such that this track will appear to be in the center of Lake Eyasi when mapped.
 }
 \keyword{datasets}

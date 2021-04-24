@@ -5,14 +5,14 @@
 \alias{d2}
 \title{Individual GPS trajectory dataset}
 \format{
-An object of class \code{data.frame} with 1501 rows and 6 columns.
+An object of class \code{data.frame} with 8005 rows and 6 columns.
 }
 \usage{
 d2
 }
 \description{
-Demonstration GPS data formatted in manner to facilitate the construction of an xtrack object and demonstration of package xtracks features.  
-For privacy concerns, the raw spatial data have been shifted such that this track will appear to be in the center of Lake Eyasi when mapped. 
+Demonstration GPS data formatted in manner to facilitate the construction of an xtrack object and demonstration of package xtracks features.
+For privacy concerns, the raw spatial data have been shifted such that this track will appear to be in the center of Lake Eyasi when mapped.
  @format A data frame with one row per trackpoint and 6 variables per trackpoint:
 \describe{
   \item{lat}{latitude, in decimal degrees, WGS 84}

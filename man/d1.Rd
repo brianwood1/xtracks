@@ -19,7 +19,7 @@ A data frame with one row per trackpoint and 6 variables per trackpoint:
 d1
 }
 \description{
-Demonstration GPS data formatted in manner to facilitate the construction of an xtrack object and demonstration of package xtracks features.  
+Demonstration GPS data formatted in manner to facilitate the construction of an xtrack object and demonstration of package xtracks features.
 For privacy concerns, the raw spatial data have been shifted such that this track will appear to be in the center of Lake Eyasi when mapped.
 }
 \keyword{datasets}

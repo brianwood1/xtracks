@@ -4,9 +4,9 @@
 \name{xtrack-class}
 \alias{xtrack-class}
 \alias{xtrack}
-\title{An xtrack object represents the movement of one individual on one day.}
+\title{An xtrack object represents the movement of one individual throughout one day.}
 \description{
-An xtrack object represents the movement of one individual on one day.
+An xtrack object represents the movement of one individual throughout one day.
 }
 \section{Fields}{
 
@@ -53,6 +53,11 @@ An xtrack object represents the movement of one individual on one day.
 
 \item{\code{get_sinuosity_measures()}}{Get more measures related to inbound and outbound sinuosity. These include: The length (km) of the outbound and inbound segments as traveled; the length (km) of the 'as the crow flies' distance from the point of leaving camp to the most distant point (sp_distance_outbound_km).
 ; The length of the 'as the crow flies' distance from the most distant point to the point of returning to camp (sp_distance_inbound_km); The mean sinuosity of the inbound and outbound segments; The trackpoint_id of the most distant (from camp centroid) trackpoint.}
+
+\item{\code{get_spatially_shifted_trackpoints(
+  new_mean_lat = -3.618489,
+  new_mean_lon = 35.06232
+)}}{this function will return your trackpoints such that their mean lat and lon are the values you specify. Useful for sharing sensitive data.}
 
 \item{\code{get_trackpoints()}}{Returns a data frame of trackpoints. This representation has more columns / more information and annotations that the 'raw' data used to construct an xtrack. This includes columns for the time between each trackpoint, meters traveled between trackpoints, speed of travel between trackpoints, and the utm coordinates of each trackpoint.}
 
