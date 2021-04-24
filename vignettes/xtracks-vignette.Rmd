@@ -2,6 +2,7 @@
 title: "Using xtracks"
 author: "Brian Wood"
 output:
+  rmarkdown::html_vignette: default
   html_document:
     theme: lumen
     css: styles.css
@@ -133,35 +134,50 @@ How to get more measures related to inbound and outbound sinuosity. These includ
 xt_2$get_sinuosity_measures()
 ```
 
-### Raster analysis to categorize places on the landscape as visited or not visited.
+### Raster analysis identifying all places visited on the landscape.
 
-This produces a binary raster representation of the xtrack, where cells that are visited are given value 1, and those not visited given value 0. The length and width of the raster cells in meters is determined by the parameter cell_size_m and is by default 10. This function accepts a parameter called selected_trackpoints which determines which of the trackpoints are rasterized. The acceptable values are
-all, in_camp, or out_of_camp. The default is all, as used in Wood et al. (2021)
+This produces a binary raster representation of the xtrack, where cells that are visited are given value 1, and those not visited given value 0. The length and width of the raster cells in meters is determined by the parameter <code>cell_size_m</code> and is by default 10. This function also accepts a parameter called <code>selected_trackpoints</code> which determines which of the trackpoints are rasterized. The acceptable values are 'all', 'in_camp', or 'out_of_camp'. The default is 'all', as used in Wood et al. (2021).
 
 ```{r}
-bin_ras_1_10m <- xt_1$as_raster_of_habitat_visited_binary()
-bin_ras_1_20m <- xt_1$as_raster_of_habitat_visited_binary(cell_size_m=20)
-raster::plot(bin_ras_1_10m)
+bin_ras_1_10m <- xt_2$as_raster_of_habitat_visited_binary()
+bin_ras_1_20m <- xt_2$as_raster_of_habitat_visited_binary(cell_size_m=20)
+par(mfrow=c(1,2))
+raster::plot(bin_ras_1_10m, main="Habitat visitation \n10 meter cells\n", legend=FALSE)
+raster::plot(bin_ras_1_20m, main="Habitat visitation \n20 meter cells\n", legend=FALSE)
 ```
 
-### Raster analysis to categorize variable visitation intensity of places on the landscape
+### Raster analysis measuring visitation intensity / occupation counts of places on the landscape
 
-This is a integer raster representation of the xtrack, where the count for each cell represents the number of trackpoints that fell within that cell's boundaries. Assuming that trackpoints are logged at regular time intervals, this raster provides a measure of the amount of time spent within each cell.
-un-visited cells are given value 0. As with the binary raster representation, The length and width of the raster cells in meters is determined by the parameter <code>cell_size_m</code> and is by default 10.
+This produces a raster representation of the xtrack, where the count for each cell represents the number of trackpoints that fell within that cell's boundaries. Assuming that trackpoints are logged at regular time intervals, this measures the amount of time spent within each cell. Pretty cool! Un-visited cells are given value 0. As with the binary raster representation, The length and width of the raster cells in meters is determined by the parameter <code>cell_size_m</code> and is by default 10.
+
+
+### Laws of human nature and extremely skewed distributions of occupation count 
+
+Law of human nature # 342: People are very choosy about where they go; 
+Law of human nature # 716: People like to hang out in just a few places. 
+
+Because of these laws, occupation counts tend to be very sparse across the landscape and occupation counts form *extremely* right-skewed distributions. Visualizing these distributions is challenging; a helpful approach can be to take the logarithm of visitation counts, which compresses the variability into a range that can be more comfortably viewed.
 
 ```{r}
 bin_ras_2 <- xt_2$as_raster_of_habitat_visited_counts()
+raster::plot(bin_ras_2)
+log_scale_bin_ras_2 <- log(bin_ras_2)
+par(mfrow=c(2,2))
+hist(raster::values(bin_ras_2), main="Occupation Count")
+hist(raster::values(log_scale_bin_ras_2), main="Log-Occupation Count")
+raster::plot(bin_ras_2, main="Occupation Count")
+raster::plot(log_scale_bin_ras_2, main="Log Occupation Count")
 ```
 
 ### Analysis of rates of habitat exploration
 
 Following Wood et al. (2021), this analysis computes the habitat visited / explored
-each day, the marginal 'new' habitat visited for each day, and the cumulative habitat explored across all days. In a real research application modeled on our paper, this analysis should be done with a temporally-sorted list of xtracks, with each xtrack representing one day of travel of the same person. In the list, the first day of data should be in position 1. For demonstration purposes, I construct below some dummy data that does not actually represent 8 days of real travel, but instead, segments 1 day into 8 partially overlapping (temporally and spatially) segments. Imagine however that xt_3 through xt_10 represent 8 days of travel; the code works the same.
+each day, the marginal 'new' habitat visited for each day, and the cumulative habitat explored across all days. In a research application modeled on our paper, this analysis should be done with a temporally-sorted list of xtracks, with each xtrack representing one day of travel of the same person. In the list, the first day of data should be in position 1. For demonstration purposes, I construct below some dummy data that does not actually represent 8 days of real travel, but instead, segments 1 day into 8 partially overlapping (temporally and spatially) segments. Imagine however that 'xt_3' through 'xt_10' represent 8 days of travel; the code works the same.
 
 #### Construct the example data
 
 ```{r}
-d_temp <- d1
+d_temp <- d2
 d1 <- d_temp[1:1000,]
 d2 <- d_temp[500:2000,]
 d3 <- d_temp[1500:3000,]
@@ -187,7 +203,7 @@ xt_8 <- xtrack(lat=d8$lat, lon=d8$lon, elevation_m=d8$elevation_m, in_camp=d8$in
 list_of_xtracks <- list(xt_3, xt_4, xt_5, xt_6, xt_7, xt_8, xt_9, xt_10)
 ```
 
-#### Execute and plot the habitat exploration analysis
+#### Execute the habitat exploration analysis
 
 ```{r}
 hab_exp_results <- get_hab_exp_across_days(list_of_xtracks, cell_size_m = 10)
@@ -199,7 +215,15 @@ Results of this analysis are handed back in a hopefully easy to understand data 
 hab_exp_results
 ```
 
-The plot below is similar to Figure 3 in Wood et al. 2021, though not as fancy. What is plotted is just one individual's travel across 'days' The y-axis here is also in units of square meters, not square kilometers.
+#### Plot the results of habitat exploration analysis
+
+Here is figure 3 in Wood et al. 2021
+
+```{r, echo=FALSE}
+knitr::include_graphics('fig_3.jpeg')
+```
+
+The plot below is modeled on that figure, though is not as fancy. What is plotted is just one individual's travel across 'days' The y-axis here is also in units of square meters, not square kilometers. The point of this is to show you that the data needed to make the fancy plot like that above are produced from this function; I'll leave the graphic design to the analyst!
 
 ```{r}
 plot(x=hab_exp_results$day, y=hab_exp_results$cum_sum_square_meters_visited_across_days, type="l", xlab="Day", ylab="Cummulative land explored (meters squared)", main="Habitat Explored Across Days")
