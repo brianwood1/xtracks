@@ -177,7 +177,7 @@ each day, the marginal 'new' habitat visited for each day, and the cumulative ha
 #### Construct the example data
 
 ```{r}
-d_temp <- d2
+d_temp <- d1
 d1 <- d_temp[1:1000,]
 d2 <- d_temp[500:2000,]
 d3 <- d_temp[1500:3000,]
@@ -200,7 +200,7 @@ xt_8 <- xtrack(lat=d8$lat, lon=d8$lon, elevation_m=d8$elevation_m, in_camp=d8$in
 #### Create a list of xtracks
 
 ```{r}
-list_of_xtracks <- list(xt_3, xt_4, xt_5, xt_6, xt_7, xt_8, xt_9, xt_10)
+list_of_xtracks <- list(xt_3, xt_4, xt_5, xt_6, xt_7, xt_8)
 ```
 
 #### Execute the habitat exploration analysis
