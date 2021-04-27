@@ -326,16 +326,16 @@ xtrack <- setRefClass("xtrack",
                          }
 
 
-                         the_white_map <- ggplot(trackpoints) +
-                           geom_path(aes(x=lon, y=lat), color=line_color, show.legend = TRUE, data=trackpoints) +
-                           coord_equal() + xlim(x_lim) + ylim(y_lim) +
+                         the_white_map <- ggplot2::ggplot(trackpoints) +
+                           ggplot2::geom_path(aes(x=lon, y=lat), color=line_color, show.legend = TRUE, data=trackpoints) +
+                           ggplot2::coord_equal() + ggplot2::xlim(x_lim) + ggplot2::ylim(y_lim) +
                            scale_bar(lon = scale_lon, lat = scale_lat,
                                      distance_lon = scale_width_km, distance_lat = new_dist_y_axis_km*.02, distance_legend = new_dist_y_axis_km*.05,
                                      dist_unit = "km", orientation = FALSE) +
-                           labs(title=the_title, subtitle=the_subtitle, x="Longitude", y="Latitude", fill="") +
-                           theme_bw(base_size = 12) +
-                           theme(legend.title = element_blank()) +
-                           scale_color_manual(values = c("red", "blue"), guide = guide_legend(override.aes = list(
+                           ggplot2::labs(title=the_title, subtitle=the_subtitle, x="Longitude", y="Latitude", fill="") +
+                           ggplot2::theme_bw(base_size = 12) +
+                           ggplot2::theme(legend.title = ggplot2::element_blank()) +
+                           ggplot2::scale_color_manual(values = c("red", "blue"), guide = ggplot2::guide_legend(override.aes = list(
                              linetype = c("solid", "blank"), shape = c(NA, 16))))
 
 
