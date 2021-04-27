@@ -1027,9 +1027,12 @@ get_hab_exp_across_days<-function(list_of_xtracks, cell_size_m=10)
 
   cum_sum_raster <- list_of_rasters[[1]]
 
+  #this is creating an error ...
+  print(paste("calling raster::values"))
   res$sum_cells_visited_this_day[1] <- sum(raster::values(list_of_rasters[[1]]))
   res$cum_sum_cells_visited_across_days[1] <- sum(raster::values(cum_sum_raster))
   res$n_new_cells_visited_this_day[1] <- sum(raster::values(list_of_rasters[[1]]))
+  print(paste("finished calling raster::values"))
 
   #the heart of the matter is here
   for(i in 2:n_xtracks)
