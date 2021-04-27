@@ -103,7 +103,7 @@ xtrack <- setRefClass("xtrack",
                        # },
                        as_spatial_lines_dataframe=function()
                        {"Provides a SpatialLinesDataFrame representation of the track. This is an object type in the sp package, an important R package for spatial analysis."
-                        the_spatial_lines <- sp::SpatialLines(list(Lines(Line(cbind(trackpoints$lon,trackpoints$lat)), ID="a")))
+                        the_spatial_lines <- sp::SpatialLines(list(sp::Lines(sp::Line(cbind(trackpoints$lon,trackpoints$lat)), ID="a")))
                         emptyData <- data.frame(matrix(0, ncol = 2, nrow = length(the_spatial_lines)))
                         the_spatialLinesDataFrame <- sp::SpatialLinesDataFrame(sl=the_spatial_lines, data=emptyData, match.ID=FALSE)
                         return(the_spatialLinesDataFrame)
@@ -327,7 +327,7 @@ xtrack <- setRefClass("xtrack",
 
 
                          the_white_map <- ggplot2::ggplot(trackpoints) +
-                           ggplot2::geom_path(aes(x=lon, y=lat), color=line_color, show.legend = TRUE, data=trackpoints) +
+                           ggplot2::geom_path(ggplot2::aes(x=lon, y=lat), color=line_color, show.legend = TRUE, data=trackpoints) +
                            ggplot2::coord_equal() + ggplot2::xlim(x_lim) + ggplot2::ylim(y_lim) +
                            scale_bar(lon = scale_lon, lat = scale_lat,
                                      distance_lon = scale_width_km, distance_lat = new_dist_y_axis_km*.02, distance_legend = new_dist_y_axis_km*.05,
