@@ -139,11 +139,11 @@ xt_2$get_sinuosity_measures()
 This produces a binary raster representation of the xtrack, where cells that are visited are given value 1, and those not visited given value 0. The length and width of the raster cells in meters is determined by the parameter <code>cell_size_m</code> and is by default 10. This function also accepts a parameter called <code>selected_trackpoints</code> which determines which of the trackpoints are rasterized. The acceptable values are 'all', 'in_camp', or 'out_of_camp'. The default is 'all', as used in Wood et al. (2021).
 
 ```{r}
-bin_ras_1_10m <- xt_2$as_raster_of_habitat_visited_binary()
-bin_ras_1_20m <- xt_2$as_raster_of_habitat_visited_binary(cell_size_m=20)
+bin_ras_1_10m <- xt_1$as_raster_of_habitat_visited_binary()
+bin_ras_1_20m <- xt_1$as_raster_of_habitat_visited_binary(cell_size_m=20)
 par(mfrow=c(1,2))
-raster::plot(bin_ras_1_10m, main="Habitat visitation \n10 meter cells\n", legend=FALSE)
-raster::plot(bin_ras_1_20m, main="Habitat visitation \n20 meter cells\n", legend=FALSE)
+raster::plot(bin_ras_1_10m, main="10 meter cells", legend=FALSE)
+raster::plot(bin_ras_1_20m, main="20 meter cells", legend=FALSE)
 ```
 
 ### Raster analysis measuring visitation intensity / occupation counts of places on the landscape
@@ -159,7 +159,7 @@ Law of human nature # 716: People like to hang out in just a few places.
 Because of these iron-clad laws, occupation counts tend to be very sparse across the landscape and occupation counts form *extremely* right-skewed distributions. Visualizing these distributions is challenging; a helpful approach can be to take the logarithm of visitation counts, which compresses the variability into a range that can be more comfortably viewed.
 
 ```{r}
-bin_ras_2 <- xt_2$as_raster_of_habitat_visited_counts()
+bin_ras_2 <- xt_1$as_raster_of_habitat_visited_counts()
 raster::plot(bin_ras_2)
 log_scale_bin_ras_2 <- log(bin_ras_2)
 par(mfrow=c(2,2))
