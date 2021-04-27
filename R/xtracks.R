@@ -983,7 +983,6 @@ xtrack <- setRefClass("xtrack",
 #' hab_exp_results <- get_hab_exp_across_days(list_of_xtracks, cell_size_m = 10)
 #' @seealso For Land exploration analysis described in Wood et al. 2021 publication see \url{https://www.nature.com/articles/s41562-020-01002-7#Sec15}
 #' @export
-
 get_hab_exp_across_days<-function(list_of_xtracks, cell_size_m=10)
 {
 
