@@ -940,7 +940,7 @@ xtrack <- setRefClass("xtrack",
                         the_spatial_lines <- SpatialLines(list(Lines(Line(cbind(trackpoints$lon,trackpoints$lat)), ID="a")))
                         emptyData <- data.frame(matrix(0, ncol = 2, nrow = length(the_spatial_lines)))
                         the_spatialLinesDataFrame <- SpatialLinesDataFrame(sl=the_spatial_lines, data=emptyData, match.ID=FALSE)
-                        kmlLines(obj=the_spatialLinesDataFrame, kmlfile=kml_file_name, name=kml_name, col=color,lwd=lwd,kmlname=kml_name, kmldescription=kml_description)
+                        maptools::kmlLines(obj=the_spatialLinesDataFrame, kmlfile=kml_file_name, name=kml_name, col=color,lwd=lwd,kmlname=kml_name, kmldescription=kml_description)
 
                       }
 

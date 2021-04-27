@@ -27,7 +27,7 @@ devtools::install_github("brianwood1/xtracks")
 
 ## Load xtracks package
 
-```{r}
+```{r, eval=TRUE}
 library(xtracks)
 ```
 
@@ -151,12 +151,12 @@ raster::plot(bin_ras_1_20m, main="Habitat visitation \n20 meter cells\n", legend
 This produces a raster representation of the xtrack, where the count for each cell represents the number of trackpoints that fell within that cell's boundaries. Assuming that trackpoints are logged at regular time intervals, this measures the amount of time spent within each cell. Pretty cool! Un-visited cells are given value 0. As with the binary raster representation, The length and width of the raster cells in meters is determined by the parameter <code>cell_size_m</code> and is by default 10.
 
 
-### Laws of human nature and extremely skewed distributions of occupation count 
+### Laws of human nature / extremely skewed distributions of occupation counts 
 
 Law of human nature # 342: People are very choosy about where they go; 
 Law of human nature # 716: People like to hang out in just a few places. 
 
-Because of these laws, occupation counts tend to be very sparse across the landscape and occupation counts form *extremely* right-skewed distributions. Visualizing these distributions is challenging; a helpful approach can be to take the logarithm of visitation counts, which compresses the variability into a range that can be more comfortably viewed.
+Because of these iron-clad laws, occupation counts tend to be very sparse across the landscape and occupation counts form *extremely* right-skewed distributions. Visualizing these distributions is challenging; a helpful approach can be to take the logarithm of visitation counts, which compresses the variability into a range that can be more comfortably viewed.
 
 ```{r}
 bin_ras_2 <- xt_2$as_raster_of_habitat_visited_counts()
@@ -223,7 +223,7 @@ Here is figure 3 in Wood et al. 2021
 knitr::include_graphics('fig_3.jpeg')
 ```
 
-The plot below is modeled on that figure, though is not as fancy. What is plotted is just one individual's travel across 'days' The y-axis here is also in units of square meters, not square kilometers. The point of this is to show you that the data needed to make the fancy plot like that above are produced from this function; I'll leave the graphic design to the analyst!
+The plot below is modeled on that figure, though not as fancy. What is plotted is just one individual's travel across simulated days. The y-axis here is also in units of square meters, not square kilometers. The goal here is demonstrate the computing tools; turning this bare-bones plot into something nicer will be your design challenge :).
 
 ```{r}
 plot(x=hab_exp_results$day, y=hab_exp_results$cum_sum_square_meters_visited_across_days, type="l", xlab="Day", ylab="Cummulative land explored (meters squared)", main="Habitat Explored Across Days")
@@ -233,9 +233,7 @@ plot(x=hab_exp_results$day, y=hab_exp_results$cum_sum_square_meters_visited_acro
 
 ### dataframe
 
-It is easy to get all the trackpoints from an xtrack in dataframe format. Note that this representation has more columns / more information and annotations that the 'raw' data used to construct an xtrack.
-This includes columns for the time between each trackpoint, meters traveled between trackpoints,
-speed of travel between trackpoints, and the utm coordinates of each trackpoint.
+It is easy to get all the trackpoints from an xtrack into dataframe format. Note that this representation has more more information and annotations that the 'raw' data used to construct an xtrack. This includes columns for the time between each trackpoint, meters traveled between trackpoints, speed of travel between trackpoints, and the utm coordinates of each trackpoint.
 
 ```{r}
 trackpoints_1 <- xt_1$get_trackpoints()
