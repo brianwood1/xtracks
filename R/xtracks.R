@@ -986,6 +986,7 @@ xtrack <- setRefClass("xtrack",
 get_hab_exp_across_days<-function(list_of_xtracks, cell_size_m=10)
 {
 
+  print("test that this is reflected in the github repo")
   n_xtracks <- length(list_of_xtracks)
   # calculate the extent needed to contain all the supplied tracks
 
