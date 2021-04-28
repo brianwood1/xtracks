@@ -1,6 +1,7 @@
 ---
 title: "Using xtracks"
 author: "Brian Wood"
+email: "brianwood@anthro.ucla.edu"
 output:
   rmarkdown::html_vignette: default
   html_document:
@@ -15,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-<b>xtracks</b> provides tools for the visualization and analysis of spatiotemporal data describing human movement patterns (real or simulated).  This tool is built with social scientists and ecologists studying human movement using GPS data in mind. xtracks is in active development and new measures of individual and collective movement and social interaction will be  added over time. This version (0.1.0) produces measures including daily distances traveled, sinuosity of travel paths, raster measures of landscape use, and rates of habitat exploration. This vignette explains these functions. A word of caution: xtracks imports several other R packages for geospatial analysis including 'sp', 'sf', 'raster', 'mapview', 'geosphere', and 'maptools'. This is a hefty set of packages, and the first time you install this package you will no doubt be prompted to install or update several of these dependencies. 
+<b>xtracks</b> provides tools for the visualization and analysis of spatiotemporal data describing human movement patterns (real or simulated).  This tool is built with social scientists and ecologists studying human movement using GPS data in mind. xtracks is in active development and new measures of individual and collective movement and social interaction will be  added over time. This version (0.1.0) produces measures including daily distances traveled, sinuosity of travel paths, raster measures of landscape use, and rates of habitat exploration. This vignette explains these functions. A word of caution: xtracks imports several other R packages for geospatial analysis including <code>sp</code>, <code>sf</code>, <code>raster</code>, <code>mapview</code>, <code>geosphere</code>, and <code>maptools</code>. This is a hefty set of packages, and the first time you install this package you will no doubt be prompted to install or update several of these dependencies. 
 
 ## Installing xtracks
 
@@ -52,7 +53,7 @@ To construct an xtrack object, one must specify:
 - time
 - distance from camp centroid
 - whether each trackpoint is "in camp" or not
-- the utm_epsg code. 
+- the utm_epsg code 
 
 lat and lon are expected to be in decimal-degree, WGS 84 format, which is the default in most GPS devices. elevation is expected to be in meters above sea level. The "in_camp" parameter refers to whether each trackpoint is within or outside the boundaries of a residential area, which in Wood et al. (2021) referred to the spatial boundaries of a Hadza camp; but could more generally be considered the boundaries of a residential or habitation area, something like a village or a camp, as appropriate in a given field setting. This is useful for segmenting travel for the purposes of acquiring resources -- AKA foraging travel, and needed for sinuosity measures. Distance from camp centroid is expected to be the as-the-crow-flies distance from the center of a residential area / 'camp' in meters (also needed for sinuosity measures). The epsg code identifies the UTM zone of your study location. This is needed for projecting lat / lon coordinates into UTM space. To find the epsg code for your study location region of your track, check out https://spatialreference.org/ref/epsg/
 
@@ -73,7 +74,7 @@ xt_2$as_mapview()
 ```
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="75%"}
 knitr::include_graphics('mapview_example.png')
 ```
 
@@ -91,7 +92,7 @@ xt_1$track_length_km
 xt_1$track_duration_hr
 ```
 
-### Segmentation of travel into bout of out of camp travel
+### Segmentation of travel into bouts of out of camp travel
 
 Here I demonstrate segmentation of travel into *bouts* of out of camp travel. An out of camp bout is when an individual leaves camp, travels some distance, and then returns to camp.
 
@@ -121,29 +122,38 @@ xt_2$get_inbound_sinuosity()
 xt_2$get_outbound_sinuosity()
 ```
 
-### Get more sinuosity-related measures
+### More sinuosity-related measures
 
-How to get more measures related to inbound and outbound sinuosity. These include:
-- The length (km) of the outbound and inbound segments as traveled,
-- The length (km) of the 'as the crow flies' distance from the point of leaving camp to the most distant point (sp_distance_outbound_km).
-- The length of the 'as the crow flies' distance from the most distant point to the point of returning to camp (sp_distance_inbound_km).
-- The mean sinuosity of the inbound and outbound segments,
-- The trackpoint_id of the most distant (from camp centroid) trackpoint.
+More sinuosity-relevant measures are available. These include:
+
+- The length (km) of the outbound and inbound segments as traveled    
+- The length (km) of the 'as the crow flies' distance from the point of leaving camp to the most distant point (sp_distance_outbound_km)  
+- The length of the 'as the crow flies' distance from the most distant point to the point of returning to camp (sp_distance_inbound_km)    
+- The mean sinuosity of the inbound and outbound segments    
+- The trackpoint_id of the most distant (from camp centroid) trackpoint  
+
 
 ```{r}
 xt_2$get_sinuosity_measures()
 ```
 
-### Raster analysis identifying all places visited on the landscape.
+### Raster analysis identifying all places visited on the landscape
 
 This produces a binary raster representation of the xtrack, where cells that are visited are given value 1, and those not visited given value 0. The length and width of the raster cells in meters is determined by the parameter <code>cell_size_m</code> and is by default 10. This function also accepts a parameter called <code>selected_trackpoints</code> which determines which of the trackpoints are rasterized. The acceptable values are 'all', 'in_camp', or 'out_of_camp'. The default is 'all', as used in Wood et al. (2021).
 
-```{r}
+```{r, echo=TRUE, eval=FALSE}
 bin_ras_1_10m <- xt_1$as_raster_of_habitat_visited_binary()
 bin_ras_1_20m <- xt_1$as_raster_of_habitat_visited_binary(cell_size_m=20)
-par(mfrow=c(1,2))
-raster::plot(bin_ras_1_10m, main="10 meter cells", legend=FALSE)
-raster::plot(bin_ras_1_20m, main="20 meter cells", legend=FALSE)
+raster::plot(bin_ras_1_10m, main="Landscape visited (10 meter cells)", legend=FALSE, cex=0.5)
+raster::plot(bin_ras_1_20m, main="Landscape visited (20 meter cells)", legend=FALSE, cex=0.5)
+```
+
+```{r, echo=FALSE}
+knitr::include_graphics("places_visited_10_m.png")
+```
+
+```{r, echo=FALSE}
+knitr::include_graphics("places_visited_20_m.png")
 ```
 
 ### Raster analysis measuring visitation intensity / occupation counts of places on the landscape
@@ -153,26 +163,35 @@ This produces a raster representation of the xtrack, where the count for each ce
 
 ### Laws of human nature / extremely skewed distributions of occupation counts 
 
-Law of human nature # 342: People are very choosy about where they go; 
+Law of human nature # 342: People are very choosy about where they go  
 Law of human nature # 716: People like to hang out in just a few places. 
 
-Because of these iron-clad laws, occupation counts tend to be very sparse across the landscape and occupation counts form *extremely* right-skewed distributions. Visualizing these distributions is challenging; a helpful approach can be to take the logarithm of visitation counts, which compresses the variability into a range that can be more comfortably viewed.
-
-```{r}
+Because of these iron-clad laws, occupation counts tend to be very sparse across the landscape and occupation counts form *extremely* right-skewed distributions. 
+```{r, eval=FALSE}
 bin_ras_2 <- xt_1$as_raster_of_habitat_visited_counts()
-raster::plot(bin_ras_2)
-log_scale_bin_ras_2 <- log(bin_ras_2)
-par(mfrow=c(2,2))
-hist(raster::values(bin_ras_2), main="Occupation Count")
-hist(raster::values(log_scale_bin_ras_2), main="Log-Occupation Count")
 raster::plot(bin_ras_2, main="Occupation Count")
+```
+
+```{r, echo=FALSE}
+knitr::include_graphics("raw_occupation_count.png")
+```
+
+Visualizing these distributions is challenging; a helpful approach can be to take the logarithm of visitation counts, which compresses the variability into a range that can be more comfortably viewed.
+
+```{r, eval=FALSE}
+bin_ras_2 <- xt_1$as_raster_of_habitat_visited_counts()
+log_scale_bin_ras_2 <- log(bin_ras_2)
 raster::plot(log_scale_bin_ras_2, main="Log Occupation Count")
 ```
 
-### Analysis of rates of habitat exploration
+```{r, echo=FALSE}
+knitr::include_graphics("log_occupation_count.png")
+```
 
-Following Wood et al. (2021), this analysis computes the habitat visited / explored
-each day, the marginal 'new' habitat visited for each day, and the cumulative habitat explored across all days. In a research application modeled on our paper, this analysis should be done with a temporally-sorted list of xtracks, with each xtrack representing one day of travel of the same person. In the list, the first day of data should be in position 1. For demonstration purposes, I construct below some dummy data that does not actually represent 8 days of real travel, but instead, segments 1 day into 8 partially overlapping (temporally and spatially) segments. Imagine however that 'xt_3' through 'xt_10' represent 8 days of travel; the code works the same.
+### Analysis of rates of land exploration
+
+Following Wood et al. (2021), this analysis computes the land visited / explored
+each day, the marginal 'new' land visited for each day, and the cumulative habitat explored across all days. In a research application modeled on our paper, this analysis should be done with a temporally-sorted list of xtracks, with each xtrack representing one day of travel of the same person. In the list, the first day of data should be in position 1. For demonstration purposes, I construct below some dummy data that does not actually represent 8 days of real travel, but instead, segments 1 day into 8 partially overlapping (temporally and spatially) segments. Imagine however that 'xt_3' through 'xt_10' represent 8 days of travel; the code works the same.
 
 #### Construct the example data
 
@@ -203,7 +222,7 @@ xt_10 <- xtrack(lat=d10$lat, lon=d10$lon, elevation_m=d10$elevation_m, in_camp=d
 list_of_xtracks <- list(xt_3, xt_4, xt_5, xt_6, xt_7, xt_8, xt_9, xt_10)
 ```
 
-#### Execute the habitat exploration analysis
+#### Execute the land exploration analysis
 
 ```{r}
 hab_exp_results <- get_hab_exp_across_days(list_of_xtracks, cell_size_m = 10)
@@ -215,21 +234,26 @@ Results of this analysis are handed back in a hopefully easy to understand data 
 hab_exp_results
 ```
 
-#### Plot the results of habitat exploration analysis
+#### Plot the results of land exploration analysis
 
 Here is figure 3 in Wood et al. 2021
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, out.width="500px"}
 knitr::include_graphics('fig_3.jpeg')
 ```
 
 The plot below is modeled on that figure, though not as fancy. What is plotted is just one individual's travel across simulated days. The y-axis here is also in units of square meters, not square kilometers. The goal here is demonstrate the computing tools; turning this bare-bones plot into something nicer will be your design challenge :).
 
-```{r}
-plot(x=hab_exp_results$day, y=hab_exp_results$cum_sum_square_meters_visited_across_days, type="l", xlab="Day", ylab="Cummulative land explored (meters squared)", main="Habitat Explored Across Days")
+```{r, eval=FALSE}
+y_ax <- expression(Land~ explored ~ (M^"2"))
+par(mar=c(4.5,4.5,2.5,2.5))
+plot(x=hab_exp_results$day, y=hab_exp_results$cum_sum_square_meters_visited_across_days, type="l", xlab="Day", ylab=y_ax, col="red", main="Land Explored Across Days", cex=0.5, lwd=2, lty=2)
+```
+```{r, echo=FALSE}
+knitr::include_graphics("hab_exp.png")
 ```
 
-## Data Export from xtracks to other formats
+## Export from xtracks to other formats
 
 ### dataframe
 
@@ -267,12 +291,15 @@ class(xt_1_sldf)
 
 ### Nice map
 
-A call to <code>plot_nice_map_of_track<code> creates a 'nice map'
-that harnesses ggplot2 functions. It is a clean plot of the xtrack's travel path with
-a simple ggplot2 black and white theme, a customized scale bar, and some metadata displayed in the subtitle area. This function accepts parameters for a title (the_title), and the color of the line representing the xtrack (line_color).
+A call to <code>plot_nice_map_of_track</code> creates a 'nice map'
+that harnesses <code>ggplot2</code> functions. It is a clean plot of the xtrack's travel path with a simple <code>ggplot2</code> black and white theme, a customized scale bar, and some metadata displayed in the subtitle area. This function accepts parameters for a title (the_title), and the color of the line representing the xtrack (line_color).
 
-```{r}
+```{r, eval=FALSE}
 xt_1$plot_nice_map_of_track(the_title="Day 250", line_color="blue")
+```
+
+```{r, echo=FALSE}
+knitr::include_graphics("nice_map.png")
 ```
 
 ### Sinuosity map
@@ -282,13 +309,17 @@ the 'as the crow flies' shortest path segments used to calculate sinuosity measu
 The trackpoint that is maximally distant from the camp centroid is plotted in yellow.
 The sinuosity measures themselves are plotted in the subtitle and the plot accepts a parameter for the map title.
 
-```{r}
+```{r, eval=FALSE}
 xt_2$plot_sinuosity_map(the_title="Sinuosity map, Day 1324")
+```
+
+```{r, echo=TRUE}
+knitr::include_graphics("sin_map.png")
 ```
 
 ### Mapview map
 
-A call to <code>as_mapview</code> is a thin interface to the package mapview, producing an interactive plot that can be viewed in the plot window or view in shiny applications. There is a known issue that makes it impossible currently to render a mapview map in an R markdown document, user beware. What are shown here are what you would see appearing in a plot window if you ran this code in an R-script; not what you would see if you ran this code in an R markdown document.
+A call to <code>as_mapview()</code> is a thin interface to the package mapview, producing an interactive plot that can be viewed in the plot window or view in shiny applications. There is a known issue that makes it impossible currently to render a mapview map in an R markdown document, user beware. What are shown here are what you would see appearing in a plot window if you ran this code in an R-script; not what you would see if you ran this code in an R markdown document.
 
 This function accepts all parameters that can be fed to the function mapview in the package mapview, such as layer.name, color, etc.
 
