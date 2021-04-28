@@ -313,7 +313,7 @@ The sinuosity measures themselves are plotted in the subtitle and the plot accep
 xt_2$plot_sinuosity_map(the_title="Sinuosity map, Day 1324")
 ```
 
-```{r, echo=TRUE}
+```{r, echo=FALSE}
 knitr::include_graphics("sin_map.png")
 ```
 
