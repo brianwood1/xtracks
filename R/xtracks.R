@@ -413,7 +413,7 @@ xtrack <- setRefClass("xtrack",
                              ggplot2::coord_equal() + ggplot2::xlim(x_lim) + ggplot2::ylim(y_lim) +
                              ggplot2::theme(legend.title = ggplot2::element_blank()) +
                              ggplot2::geom_path(data=outbound_sp, ggplot2::aes(x=x, y=y, color=spath_segment), linetype=2, color='grey') +
-                             ggplot2::geom_path(data=inbound_sp, aes(x=x, y=y, color=spath_segment), linetype=2, color='grey') +
+                             ggplot2::geom_path(data=inbound_sp, ggplot2::aes(x=x, y=y, color=spath_segment), linetype=2, color='grey') +
                              ggplot2::geom_point(ggplot2::aes(x=most_distant_lon, y=most_distant_lat), color='yellow') +
                              ggplot2::labs(title=paste(the_title), subtitle=the_subtitle, x="Longitude", y="Latitude", fill="") + ggplot2::theme_bw(base_size = 12)
                            return(p)
