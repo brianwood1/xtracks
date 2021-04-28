@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-<b>xtracks</b> provides tools for the visualization and analysis of spatiotemporal data describing human movement patterns (real or simulated).  This tool is built with social scientists and ecologists studying human movement using GPS data in mind. xtracks is in active development and new measures of individual and collective movement and social interaction will be  added over time. This version (1.0) produces measures including daily distances traveled, sinuosity of travel paths, raster measures of landscape use, and rates of habitat exploration. This vignette explains these functions. A word of caution: xtracks imports several other R packages for geospatial analysis including 'sp', 'sf', 'raster', 'mapview', 'geosphere', and 'maptools'. This is a hefty set of packages, and the first time you install this package you will no doubt be prompted to install or update several of these dependencies. 
+<b>xtracks</b> provides tools for the visualization and analysis of spatiotemporal data describing human movement patterns (real or simulated).  This tool is built with social scientists and ecologists studying human movement using GPS data in mind. xtracks is in active development and new measures of individual and collective movement and social interaction will be  added over time. This version (0.1.0) produces measures including daily distances traveled, sinuosity of travel paths, raster measures of landscape use, and rates of habitat exploration. This vignette explains these functions. A word of caution: xtracks imports several other R packages for geospatial analysis including 'sp', 'sf', 'raster', 'mapview', 'geosphere', and 'maptools'. This is a hefty set of packages, and the first time you install this package you will no doubt be prompted to install or update several of these dependencies. 
 
 ## Installing xtracks
 
@@ -310,30 +310,26 @@ a+b
 knitr::include_graphics('two_track_viz.png')
 ```
 
-Other plotting options you can chose from might harness the power of 'plot' functions defined in other packages.
-Below are simple examples of using the plot functions defined for
-<code>sp</code> and <code>raster</code>; these plots can be sweetened by consulting those packages' documentation.
+Other plotting options you can chose from might harness the power of 'plot' functions defined in other packages, such as <code>sp</code> or <code>raster</code>; since xtracks exports to those formats.
 
-A plot of the spatialLinesDataFrame representation of the xtrack
 
-```{r}
-plot(xt_1$as_spatial_lines_dataframe())
-```
+### References
 
-A plot of the binary raster representation of the xtrack
+Appelhans, T., Detsch, F., Reudenbach, C., and Woellauer, S. (2020). mapview: Interactive Viewing of Spatial Data in R. R package version 2.9.0. https://CRAN.R-project.org/package=mapview
+  
+Bivand, R., and Lewin-Koh, N. (2021). maptools: Tools for Handling Spatial Objects. R package version 1.1-1. https://CRAN.R-project.org/package=maptools
+  
+Hijmans, R. (2020). raster: Geographic Data Analysis and Modeling. R package version 3.4-5. https://CRAN.R-project.org/package=raster
 
-```{r}
-plot(xt_1$as_raster_of_habitat_visited_binary())
-```
+Hijmans, R. (2019). geosphere: Spherical Trigonometry. R package version 1.5-10.
+  https://CRAN.R-project.org/package=geosphere
+  
+Pebesma, E.J., and Bivand, R. 2005. Classes and methods for spatial data in R. R News 5 (2),
+  https://cran.r-project.org/doc/Rnews/.
+  
+Pebesma, E., 2018. Simple Features for R: Standardized Support for Spatial Vector Data. The R Journal 10 (1), 439-446, https://doi.org/10.32614/RJ-2018-009
 
-A plot of the integer count raster representation of the xtrack
-
-```{r}
-plot(xt_1$as_raster_of_habitat_visited_counts())
-```
-
-### Referenes
-
-[to add]
+Wood, B. M., Harris, J. A., Raichlen, D. A., Pontzer, H., Sayre, K., Sancilio, A., ... & Jones, J. H. (2021). Gendered movement ecology and landscape use in Hadza hunter-gatherers. Nature Human Behaviour, 1-11.  
+  
 
 
