@@ -368,10 +368,10 @@ xtrack <- setRefClass("xtrack",
 
                          if(sin_rec$inbound_sinuosity==0 | sin_rec$outbound_sinuosity==0)
                          {
-                           p <- ggplot() + geom_path(show.legend = TRUE, aes(x=trackpoints$lon, y=trackpoints$lat), color='yellow') +
-                             coord_equal() + xlim(x_lim) + ylim(y_lim) +
-                             theme(legend.title = element_blank()) +
-                             labs(title=the_title, subtitle="There are no bouts out of camp to display", x="Longitude", y="Latitude", fill="") + theme_bw(base_size = 12)
+                           p <- ggplot2::ggplot() + ggplot2::geom_path(show.legend = TRUE, ggplot2::aes(x=trackpoints$lon, y=trackpoints$lat), color='yellow') +
+                             ggplot2::coord_equal() + ggplot2::xlim(x_lim) + ggplot2::ylim(y_lim) +
+                             ggplot2::theme(legend.title = ggplot2::element_blank()) +
+                             ggplot2::labs(title=the_title, subtitle="There are no bouts out of camp to display", x="Longitude", y="Latitude", fill="") + ggplot2::theme_bw(base_size = 12)
 
                            return(p)
                          } else { #if there are sinuosity calculations to work with
@@ -408,14 +408,14 @@ xtrack <- setRefClass("xtrack",
 
                            trackpoints$path_segment <<- factor(trackpoints$path_segment, levels=c("Outbound segment", "Inbound segment", "In camp / other"), labels=c("Outbound segment", "Inbound segment", "In camp / other"))
                            trackpoints$`Track segment` <<- trackpoints$path_segment
-                           p <- ggplot(trackpoints, aes(lon, lat, color=`Track segment`))+ geom_path() +
-                             scale_colour_manual(values=c("red","blue","darkgreen")) +
-                             coord_equal() + xlim(x_lim) + ylim(y_lim) +
-                             theme(legend.title = element_blank()) +
-                             geom_path(data=outbound_sp, aes(x=x, y=y, color=spath_segment), linetype=2, color='grey') +
-                             geom_path(data=inbound_sp, aes(x=x, y=y, color=spath_segment), linetype=2, color='grey') +
-                             geom_point(aes(x=most_distant_lon, y=most_distant_lat), color='yellow') +
-                             labs(title=paste(the_title), subtitle=the_subtitle, x="Longitude", y="Latitude", fill="") + theme_bw(base_size = 12)
+                           p <- ggplot2::ggplot(trackpoints, ggplot2::aes(lon, lat, color=`Track segment`))+ ggplot2::geom_path() +
+                             ggplot2::scale_colour_manual(values=c("red","blue","darkgreen")) +
+                             ggplot2::coord_equal() + ggplot2::xlim(x_lim) + ggplot2::ylim(y_lim) +
+                             ggplot2::theme(legend.title = ggplot2::element_blank()) +
+                             ggplot2::geom_path(data=outbound_sp, ggplot2::aes(x=x, y=y, color=spath_segment), linetype=2, color='grey') +
+                             ggplot2::geom_path(data=inbound_sp, aes(x=x, y=y, color=spath_segment), linetype=2, color='grey') +
+                             ggplot2::geom_point(ggplot2::aes(x=most_distant_lon, y=most_distant_lat), color='yellow') +
+                             ggplot2::labs(title=paste(the_title), subtitle=the_subtitle, x="Longitude", y="Latitude", fill="") + ggplot2::theme_bw(base_size = 12)
                            return(p)
                          }
 
@@ -425,10 +425,10 @@ xtrack <- setRefClass("xtrack",
                          the_scale_bar <- create_scale_bar(lon = lon, lat = lat, distance_lon = distance_lon, distance_lat = distance_lat, distance_legend = distance_legend, dist_unit = dist_unit)
                          #the_scale_bar$legend
                          # First rectangle
-                         rectangle1 <- ggplot2::geom_polygon(data = the_scale_bar$rectangle, aes(x = lon, y = lat), fill = rec_fill, colour = rec_colour)
+                         rectangle1 <- ggplot2::geom_polygon(data = the_scale_bar$rectangle, ggplot2::aes(x = lon, y = lat), fill = rec_fill, colour = rec_colour)
 
                          # Second rectangle
-                         rectangle2 <- ggplot2::geom_polygon(data = the_scale_bar$rectangle2, aes(x = lon, y = lat), fill = rec2_fill, colour = rec2_colour)
+                         rectangle2 <- ggplot2::geom_polygon(data = the_scale_bar$rectangle2, ggplot2::aes(x = lon, y = lat), fill = rec2_fill, colour = rec2_colour)
 
                          # Legend
                          scale_bar_legend <- ggplot2::annotate("text", label = paste(the_scale_bar$legend[,"text"], dist_unit, sep=""), x = the_scale_bar$legend[,"long"], y = the_scale_bar$legend[,"lat"], size = legend_size, colour = legend_colour)
@@ -438,7 +438,7 @@ xtrack <- setRefClass("xtrack",
                          if(orientation){# Add an arrow pointing North
                            ???#what package is this???
                            coords_arrow <- create_orientation_arrow(scale_bar = the_scale_bar, length = arrow_length, distance = arrow_distance, dist_unit = dist_unit)
-                           arrow <- list(ggplot2::geom_segment(data = coords_arrow$res, aes(x = x, y = y, xend = xend, yend = yend)), annotate("text", label = "N", x = coords_arrow$coords_n[1,"x"], y = coords_arrow$coords_n[1,"y"], size = arrow_north_size, colour = "black"))
+                           arrow <- list(ggplot2::geom_segment(data = coords_arrow$res, ggplot2::aes(x = x, y = y, xend = xend, yend = yend)), annotate("text", label = "N", x = coords_arrow$coords_n[1,"x"], y = coords_arrow$coords_n[1,"y"], size = arrow_north_size, colour = "black"))
                            res <- c(res, arrow)
                          }
                          return(res)
@@ -468,127 +468,6 @@ xtrack <- setRefClass("xtrack",
                          legend <- rbind(on_top, on_top2, on_top3)
                          legend <- data.frame(cbind(legend, text = c(0, distance_lon, distance_lon*2)), stringsAsFactors = FALSE, row.names = NULL)
                          return(list(rectangle = rectangle, rectangle2 = rectangle2, legend = legend))
-                       },
-                       calc_and_save_raster_of_habitat_visited_binary=function(cell_size_m=10, interpolated=TRUE, int_time_res=5)
-                       {
-                         #this function calculates and saves a raster of habvis binary.
-
-                         #cell_size_m=10
-                         #interpolated=TRUE
-                         #int_time_res=5
-                         #t <- track(4416, interpolated=TRUE, int_time_res=5)
-                         #camp <- t$camp
-                         #pk_track_id <- t$pk_track_id
-                         #trackpoints <- t$trackpoints
-                         #constructs a SpatialLines object from the trackpoints,
-                         #then overlays this on a raster background, and each cell
-                         #that is intersected > 0 times receives a value of 1, otherwise NA
-
-                         file_name <- NA
-                         if(interpolated)
-                         {
-                           file_name <- paste("track_", pk_track_id, "_", cell_size_m, "_m_raster_of_visitation_binary_interpolated_", int_time_res, ".rds", sep="")
-
-                         } else {
-                           file_name <- paste("track_", pk_track_id, "_", cell_size_m, "_m_raster_of_visitation_binary.rds", sep="")
-                         }
-
-                         setwd("~/Dropbox/Manuscripts/Age and sex differences in Hadza hunter-gatherer space use/data/rasterized_tracks/")
-
-
-                         camp_raster <- getRasterByCamp(camp, cell_size_m)
-                         #camp_raster <- getRasterByCamp("hukumako_", cell_size_m)
-                         extent_of_camp_raster <- extent(camp_raster)
-
-
-
-                         if(file.exists(file_name))
-                         {
-                           r <- readRDS(file=file_name)
-                           extent_of_saved_raster <- extent(r)
-                           extent_is_equal_to_that_of_camp <- extent_of_camp_raster==extent_of_saved_raster
-
-                           if(extent_is_equal_to_that_of_camp)
-                           {
-                             print("this habvis has already been calculated, but making another now")
-                             camp_raster <- getRasterByCamp(camp, cell_size_m)
-                             #camp_raster <- getRasterByCamp("hukumako_", cell_size_m)
-                             cr_e <- extent(camp_raster)
-                             tps <- data.frame(lon=trackpoints$lon, lat=trackpoints$lat)
-
-                             latlong = "+proj=longlat +datum=WGS84 +ellps=WGS84"
-                             utm <- "+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
-                             sp::coordinates(tps) = cbind("lon", "lat")
-                             sp::proj4string(tps) <- sp::CRS(latlong)
-                             lines <- SpatialLines(list(Lines(list(Line(tps)), "id")))
-                             proj4string(lines) <- sp::CRS(latlong)
-                             trackpoints_utm <- spTransform(lines,  sp::CRS(utm))
-                             #class(trackpoints_utm)
-
-                             tp_e <- extent(trackpoints_utm)
-                             #plot(trackpoints_utm, add=TRUE)
-                             tp_r <- raster(cr_e)
-                             res(tp_r) <- cell_size_m
-                             #plot(trackpoints_utm)
-                             rasterized_trackpoints <- rasterize(x=trackpoints_utm, y=tp_r, fun='count')
-                             cells_visited_today <- rasterized_trackpoints>0
-                             saveRDS(cells_visited_today, file=file_name)
-                           } else {
-                             print("saved raster version of that track found, but wrong extent, so making a new one")
-                             camp_raster <- getRasterByCamp(camp, cell_size_m)
-                             #camp_raster <- getRasterByCamp("hukumako_", cell_size_m)
-                             cr_e <- extent(camp_raster)
-                             #trackpoints <- t4424$trackpoints
-                             tps <- data.frame(lon=trackpoints$lon, lat=trackpoints$lat)
-
-                             latlong = "+proj=longlat +datum=WGS84 +ellps=WGS84"
-                             utm <- "+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
-                             sp::coordinates(tps) = cbind("lon", "lat")
-                             sp::proj4string(tps) <- sp::CRS(latlong)
-                             lines <- SpatialLines(list(Lines(list(Line(tps)), "id")))
-                             proj4string(lines) <- sp::CRS(latlong)
-                             trackpoints_utm <- spTransform(lines,  sp::CRS(utm))
-                             tp_e <- extent(trackpoints_utm)
-                             #plot(trackpoints_utm, add=TRUE)
-                             tp_r <- raster(cr_e)
-
-
-                             res(tp_r) <- cell_size_m
-
-                             rasterized_trackpoints <- rasterize(x=trackpoints_utm, y=tp_r, fun='count')
-                             extent(rasterized_trackpoints)
-                             cells_visited_today <- rasterized_trackpoints>0
-                             saveRDS(cells_visited_today, file=file_name)
-                             #return(cells_visited_today)
-                           }
-                         } else {
-                           print("no saved raster version of that track found, so creating one")
-
-                           camp_raster <- getRasterByCamp(camp, cell_size_m)
-                           #camp_raster <- getRasterByCamp("hukumako_", cell_size_m)
-                           cr_e <- extent(camp_raster)
-                           tps <- data.frame(lon=trackpoints$lon, lat=trackpoints$lat)
-
-                           latlong = "+proj=longlat +datum=WGS84 +ellps=WGS84"
-                           utm <- "+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
-                           sp::coordinates(tps) = cbind("lon", "lat")
-                           sp::proj4string(tps) <- sp::CRS(latlong)
-                           lines <- SpatialLines(list(Lines(list(Line(tps)), "id")))
-                           proj4string(lines) <- sp::CRS(latlong)
-                           trackpoints_utm <- spTransform(lines,  sp::CRS(utm))
-                           #class(trackpoints_utm)
-
-                           tp_e <- extent(trackpoints_utm)
-                           #plot(trackpoints_utm, add=TRUE)
-                           tp_r <- raster(cr_e)
-                           res(tp_r) <- cell_size_m
-                           #plot(trackpoints_utm)
-                           rasterized_trackpoints <- rasterize(x=trackpoints_utm, y=tp_r, fun='count')
-                           cells_visited_today <- rasterized_trackpoints>0
-                           saveRDS(cells_visited_today, file=file_name)
-                           #return(cells_visited_today)
-
-                         }
                        },
                        has_data_for_sinuosity_measures = function()
                        {"Test if the xtrack has data sufficient to enable sinuosity calculations of the manner carried out in Wood et al. 2021."
