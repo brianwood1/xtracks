@@ -178,29 +178,29 @@ each day, the marginal 'new' habitat visited for each day, and the cumulative ha
 
 ```{r}
 d_temp <- d1
-d1 <- d_temp[1:1000,]
-d2 <- d_temp[500:2000,]
-d3 <- d_temp[1500:3000,]
-d4 <- d_temp[2500:4000,]
-d5 <- d_temp[3500:5000,]
-d6 <- d_temp[4500:6000,]
-d7 <- d_temp[5500:7000,]
-d8 <- d_temp[6500:8260,]
+d3 <- d_temp[1:1000,]
+d4 <- d_temp[500:2000,]
+d5 <- d_temp[1500:3000,]
+d6 <- d_temp[2500:4000,]
+d7 <- d_temp[3500:5000,]
+d8 <- d_temp[4500:6000,]
+d9 <- d_temp[5500:7000,]
+d10 <- d_temp[6500:8260,]
 
-xt_1 <- xtrack(lat=d1$lat, lon=d1$lon, elevation_m=d1$elevation_m, in_camp=d1$in_camp, unix_time=d1$unix_time, distance_from_camp_m=d1$distance_from_camp_m, utm_epsg=32736)
-xt_2 <- xtrack(lat=d2$lat, lon=d2$lon, elevation_m=d2$elevation_m, in_camp=d2$in_camp, unix_time=d2$unix_time, distance_from_camp_m=d2$distance_from_camp_m, utm_epsg=32736)
 xt_3 <- xtrack(lat=d3$lat, lon=d3$lon, elevation_m=d3$elevation_m, in_camp=d3$in_camp, unix_time=d3$unix_time, distance_from_camp_m=d3$distance_from_camp_m, utm_epsg=32736)
 xt_4 <- xtrack(lat=d4$lat, lon=d4$lon, elevation_m=d4$elevation_m, in_camp=d4$in_camp, unix_time=d4$unix_time, distance_from_camp_m=d4$distance_from_camp_m, utm_epsg=32736)
 xt_5 <- xtrack(lat=d5$lat, lon=d5$lon, elevation_m=d5$elevation_m, in_camp=d5$in_camp, unix_time=d5$unix_time, distance_from_camp_m=d5$distance_from_camp_m, utm_epsg=32736)
 xt_6 <- xtrack(lat=d6$lat, lon=d6$lon, elevation_m=d6$elevation_m, in_camp=d6$in_camp, unix_time=d6$unix_time, distance_from_camp_m=d6$distance_from_camp_m, utm_epsg=32736)
 xt_7 <- xtrack(lat=d7$lat, lon=d7$lon, elevation_m=d7$elevation_m, in_camp=d7$in_camp, unix_time=d7$unix_time, distance_from_camp_m=d7$distance_from_camp_m, utm_epsg=32736)
 xt_8 <- xtrack(lat=d8$lat, lon=d8$lon, elevation_m=d8$elevation_m, in_camp=d8$in_camp, unix_time=d8$unix_time, distance_from_camp_m=d8$distance_from_camp_m, utm_epsg=32736)
+xt_9 <- xtrack(lat=d9$lat, lon=d9$lon, elevation_m=d9$elevation_m, in_camp=d9$in_camp, unix_time=d9$unix_time, distance_from_camp_m=d9$distance_from_camp_m, utm_epsg=32736)
+xt_10 <- xtrack(lat=d10$lat, lon=d10$lon, elevation_m=d10$elevation_m, in_camp=d10$in_camp, unix_time=d10$unix_time, distance_from_camp_m=d10$distance_from_camp_m, utm_epsg=32736)
 ```
 
 #### Create a list of xtracks
 
 ```{r}
-list_of_xtracks <- list(xt_3, xt_4, xt_5, xt_6, xt_7, xt_8)
+list_of_xtracks <- list(xt_3, xt_4, xt_5, xt_6, xt_7, xt_8, xt_9, xt_10)
 ```
 
 #### Execute the habitat exploration analysis
@@ -272,7 +272,7 @@ that harnesses ggplot2 functions. It is a clean plot of the xtrack's travel path
 a simple ggplot2 black and white theme, a customized scale bar, and some metadata displayed in the subtitle area. This function accepts parameters for a title (the_title), and the color of the line representing the xtrack (line_color).
 
 ```{r}
-xt_2$plot_nice_map_of_track(the_title="Day 250", line_color="blue")
+xt_1$plot_nice_map_of_track(the_title="Day 250", line_color="blue")
 ```
 
 ### Sinuosity map
@@ -288,7 +288,7 @@ xt_2$plot_sinuosity_map(the_title="Sinuosity map, Day 1324")
 
 ### Mapview map
 
-A call to <code>as_mapview</code> is a thin interface to the package mapview, producing an interactive plot that can be viewed in the plot window or view in shiny applications. There is a known issue that makes it impossible currently to render a mapview map in an rmarkdown document, user beware. What are shown here are what you would see appearing in a plot window if you ran this code in an R-script; not what you would see if you ran this code in an rmarkdown document.
+A call to <code>as_mapview</code> is a thin interface to the package mapview, producing an interactive plot that can be viewed in the plot window or view in shiny applications. There is a known issue that makes it impossible currently to render a mapview map in an R markdown document, user beware. What are shown here are what you would see appearing in a plot window if you ran this code in an R-script; not what you would see if you ran this code in an R markdown document.
 
 This function accepts all parameters that can be fed to the function mapview in the package mapview, such as layer.name, color, etc.
 
@@ -297,20 +297,22 @@ xt_1$as_mapview(format="line", layer.name="Hot track", color="red")
 ```
 
 
-Using the power of mapview, we can display multiple xtracks on a dynamic map background
+Using the power of mapview, we can also display multiple xtracks on a dynamic map background
 as follows:
 
 ```{r, eval=FALSE}
 a <- xt_1$as_mapview(format="line", layer.name="Cool track", color="blue")
 b <- xt_2$as_mapview(format="line", layer.name="Hot track", color="red")
-a + b
+a+b
 ```
 
+```{r, echo=FALSE}
+knitr::include_graphics('two_track_viz.png')
+```
 
-Other plotting options harness the power of 'plot' functions defined in other packages.
+Other plotting options you can chose from might harness the power of 'plot' functions defined in other packages.
 Below are simple examples of using the plot functions defined for
-SP and Raster; these plots can be sweetened by consulting those packages'
-documentation.
+<code>sp</code> and <code>raster</code>; these plots can be sweetened by consulting those packages' documentation.
 
 A plot of the spatialLinesDataFrame representation of the xtrack
 
