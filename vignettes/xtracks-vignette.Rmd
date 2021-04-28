@@ -360,7 +360,7 @@ Pebesma, E.J., and Bivand, R. 2005. Classes and methods for spatial data in R. R
   
 Pebesma, E., 2018. Simple Features for R: Standardized Support for Spatial Vector Data. The R Journal 10 (1), 439-446, https://doi.org/10.32614/RJ-2018-009
 
-Wood, B. M., Harris, J. A., Raichlen, D. A., Pontzer, H., Sayre, K., Sancilio, A., ... & Jones, J. H. (2021). Gendered movement ecology and landscape use in Hadza hunter-gatherers. Nature Human Behaviour, 1-11.  
+Wood, B. M., Harris, J. A., Raichlen, D. A., Pontzer, H., Sayre, K., Sancilio, A., ... & Jones, J. H. (2021). Gendered movement ecology and landscape use in Hadza hunter-gatherers. Nature Human Behaviour, 5, 436–446.
   
 
 
