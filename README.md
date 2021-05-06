@@ -6,7 +6,7 @@ This tool is built with social scientists and ecologists studying human movement
 xtracks is in active development and new measures of individual and collective movement and social interaction will be added over time. 
 This version (0.1.0) produces measures including daily distances traveled, sinuosity of travel paths, raster measures of landscape use, and rates of habitat exploration. 
 
-For an overview of xtracks, <a href="https://github.com/brianwood1/xtracks/blob/main/vignettes/Using%20xtracks.pdf">please see the vignette "using xtracks"</a>.
+For an overview of xtracks, <a href="https://github.com/brianwood1/xtracks/blob/main/vignettes/using_xtracks.pdf">please see the vignette "using xtracks"</a>.
 
 This software is citable and has a DOI
 
