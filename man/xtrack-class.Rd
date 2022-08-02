@@ -70,7 +70,9 @@ An xtrack object represents the movement of one individual throughout one day.
   in_camp,
   unix_time,
   distance_from_camp_m,
-  utm_epsg
+  utm_epsg,
+  total_length_sin_criteria_m = 500,
+  distance_from_camp_sin_criteria_m = 500
 )}}{Creates an xtrack object. To construct an xtrack object, one must specify: the lat, lon, elevation, in-camp status, time, distance from camp centroid, whether each trackpoint is 'in camp' or not, and the utm_epsg code. lat and lon are expected to be in decimal-degree, WGS 84 format, which is the default in most GPS devices mobile devices. Elevation is expected to be in meters above sealevel. the "in_camp" parameter refers to whether each trackpoint is within or outside the boundaries of a residential area, which in Wood et al. 2021 refers to the spatial boundaries of a Hadza camp; but could more generally be considered the boundaries of a residential or habitation area, something like a village or a camp, as appropriate in a given field setting. This is useful for indicating travel for the purpose of aquiring resources -- AKA foraging travel, and needed for sinuosity measures.Distance from camp centroid is expected to be the as-the-crow-flies distance from the center of a residential area  or 'camp' in meters (also needed for sinuosity measures). The epsg code identifies the UTM zone of your study location. This is needed for projecting lat / lon coordinates into UTM space. To find the epsg code for your study location region of your track, check out <https://spatialreference.org/ref/epsg/>}
 
 \item{\code{plot_nice_map_of_track(the_title = "", line_color = "black")}}{A call to plot_nice_map_of_track creates a 'nice map' that harnesses ggplot2 functions. It is a clean plot of the xtrack's travel path with a simple ggplot2 black and white theme, a customized scale bar, and some metadata displayed in the subtitle area. This function accepts parameters for a title (the_title), and the color of the line representing the xtrack (line_color).}
