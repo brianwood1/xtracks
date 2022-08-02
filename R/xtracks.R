@@ -1196,6 +1196,7 @@ get_raster_extent_enclosing_xtracks <- function(xtrack_list, resolution_m=10, bu
 
 unit_test_geographic_segregation <- function()
 {
+
   data(d1)
   data(d2)
   data(d3)
