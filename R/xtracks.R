@@ -828,8 +828,8 @@ library(raster)
 #' in Wood et al. 2021), or they could represent age groups, family groups, gender X age groups,
 #' all could be potentially interesting. This analysis should be done with two lists of xtrack objects, with each xtrack representing
 #' one day of travel. The lists can be of any length, but for an apples-to-apples empirical comparison, should be approx. equal in length.
-#' @param xtrack_list_1 a list of xtracks representing 'group 1'
-#' @param xtrack_list_2 a list of xtracks representing 'group 1'.
+#' @param xtrack_list_1 a list of xtracks representing 'group 1'. Does not need to be a named list.
+#' @param xtrack_list_2 a list of xtracks representing 'group 2'. Does not need to be a named list.
 #' @param cell_size_m The resolution of the raster analysis -- i.e. the height and width of each cell in the raster representation of the landscape, in meters.
 #' @returns A list presenting analysis results
 #' \describe{
