@@ -641,14 +641,14 @@ xtrack <- setRefClass("xtrack",
                           max_dist_on_longest_dist_bout <- stats_on_longest_distance_bout$max_dist_from_camp_during_bout_m
                           total_length_of_bout <- stats_on_longest_distance_bout$total_length_of_bout_m
 
-                          
+
                           # this tests whether the longest distance bout is too short to consider for calculations,
                           # following Raichlen et al. 2014, in Wood et al. 2020 we only considered bouts where the
-                          # subject has traveled at least 500 m and has gone 500 m from camp. 
-                          
+                          # subject has traveled at least 500 m and has gone 500 m from camp.
+
                           if(max_dist_on_longest_dist_bout < distance_from_camp_sin_criteria_m | total_length_of_bout < total_length_sin_criteria_m)
                           {
-                            
+
                             #print(paste("xtrack does not have data for sinuosity measures"))
                             has_bout_appropriate_for_sinuosity_measures <<- 0
                             length_outbound_section_km<<-0
@@ -763,7 +763,7 @@ xtrack <- setRefClass("xtrack",
                       },
                       set_habvis_binary_raster=function(habvis_raster)
                       {
-
+                          #to do
                       },
                       write_gpx_file=function(gpx_file_name="test.gpx", gpx_track_name="test")
                       { "writes a GPX file representation of the track. GPX files are widely used in GIS and GPS applications."
@@ -816,23 +816,22 @@ xtrack <- setRefClass("xtrack",
 
                       }
 
-
-
-
 ))
 
+library(raster)
 
-#' Analysis of geographic overlap and geographic segregation between two groups.
+#' @title Analysis of geographic overlap and geographic segregation between two groups of xtracks
 #'
-#' This analysis calculates measures of geographic overlap and geographic segregation 
+#' @description
+#' This analysis calculates measures of geographic overlap and geographic segregation
 #' between all the xtracks in one group and all the xtracks in another group. These groups could be gender groups (as done
-#' in Wood et al. 2021), or they could represent age groups, family groups, gender X age groups, 
+#' in Wood et al. 2021), or they could represent age groups, family groups, gender X age groups,
 #' all could be potentially interesting. This analysis should be done with two lists of xtrack objects, with each xtrack representing
 #' one day of travel. The lists can be of any length, but for an apples-to-apples empirical comparison, should be approx. equal in length.
 #' @param xtrack_list_1 a list of xtracks representing 'group 1'
-#' @param xtrack_list_2 a list of xtracks representing 'group 1'. 
+#' @param xtrack_list_2 a list of xtracks representing 'group 1'.
 #' @param cell_size_m The resolution of the raster analysis -- i.e. the height and width of each cell in the raster representation of the landscape, in meters.
-#' @return A list (format described below) presenting analysis results
+#' @returns A list presenting analysis results
 #' \describe{
 #'   \item{square_meters_visited_1}{square meters of unique landscape areas visited by all xtracks in group 1}
 #'   \item{square_meters_visited_2}{square meters of unique landscape areas visited by all xtracks in group 2}
@@ -842,10 +841,25 @@ xtrack <- setRefClass("xtrack",
 #'   \item{percent_of_what_2_visited_that_was_visited_by_1}{percent of land visited by group 2 that was visited by group 1}
 #'   \item{percent_of_what_was_visited_by_1_or_2_that_was_visited_by_1}{percent of unique land visited by 1 or 2 that was visited by 1}
 #'   \item{percent_of_what_was_visited_by_1_or_2_that_was_visited_by_2}{percent of unique land visited by 1 or 2 that was visited by 2}
-#'   \item{percent_of_what_was_visited_by_1_or_2_that_was_visited_by_1_and_2}{percent of unique land visited by 1 or 2 that was visited by both 1 and 2.}
+#'   \item{percent_of_what_was_visited_by_1_or_2_that_was_visited_by_1_and_2}{percent of unique land visited by 1 or 2 that was visited by both 1 and 2.}}
+#' @examples
+#' data(d1,d2,d3,d4,d5,d6,d7,d8)
+#' xt_1 <- xtrack(lat=d1$lat, lon=d1$lon, elevation_m=d1$elevation_m, in_camp=d1$in_camp, unix_time=d1$unix_time, distance_from_camp_m=d1$distance_from_camp_m, utm_epsg=32736)
+#' xt_2 <- xtrack(lat=d2$lat, lon=d2$lon, elevation_m=d2$elevation_m, in_camp=d2$in_camp, unix_time=d2$unix_time, distance_from_camp_m=d2$distance_from_camp_m, utm_epsg=32736)
+#' xt_3 <- xtrack(lat=d3$lat, lon=d3$lon, elevation_m=d3$elevation_m, in_camp=d3$in_camp, unix_time=d3$unix_time, distance_from_camp_m=d3$distance_from_camp_m, utm_epsg=32736)
+#' xt_4 <- xtrack(lat=d4$lat, lon=d4$lon, elevation_m=d4$elevation_m, in_camp=d4$in_camp, unix_time=d4$unix_time, distance_from_camp_m=d4$distance_from_camp_m, utm_epsg=32736)
+#' xt_5 <- xtrack(lat=d5$lat, lon=d5$lon, elevation_m=d5$elevation_m, in_camp=d5$in_camp, unix_time=d5$unix_time, distance_from_camp_m=d5$distance_from_camp_m, utm_epsg=32736)
+#' xt_6 <- xtrack(lat=d6$lat, lon=d6$lon, elevation_m=d6$elevation_m, in_camp=d6$in_camp, unix_time=d6$unix_time, distance_from_camp_m=d6$distance_from_camp_m, utm_epsg=32736)
+#' xt_7 <- xtrack(lat=d7$lat, lon=d7$lon, elevation_m=d7$elevation_m, in_camp=d7$in_camp, unix_time=d7$unix_time, distance_from_camp_m=d7$distance_from_camp_m, utm_epsg=32736)
+#' xt_8 <- xtrack(lat=d8$lat, lon=d8$lon, elevation_m=d8$elevation_m, in_camp=d8$in_camp, unix_time=d8$unix_time, distance_from_camp_m=d8$distance_from_camp_m, utm_epsg=32736)
+#' list_1 <- list(xt_1, xt_2, xt_3, xt_4)
+#' list_2 <- list(xt_5, xt_6, xt_7, xt_8)
+#' geo_seg_results <- calculate_geographic_overlap_and_segregation(list_1, list_2, cell_size_m = 10)
+#' @seealso For example of geographic segregation and overlap analysis see figure 4 in Wood et al. 2021 publication see \url{https://www.nature.com/articles/s41562-020-01002-7}
+#' @export
 calculate_geographic_overlap_and_segregation <- function(xtrack_list_1, xtrack_list_2, cell_size_m=10)
 {
-  library(raster)
+
   xtrack_list_both <- c(xtrack_list_1, xtrack_list_2)
   union_1_or_2 <- get_raster_of_land_visited_binary_summed_across_xtracks(xtrack_list_both)
   extent_of_union <- raster::extent(union_1_or_2$the_raster)
@@ -854,7 +868,7 @@ calculate_geographic_overlap_and_segregation <- function(xtrack_list_1, xtrack_l
   extents_match <- raster::extent(union_1_or_2$the_raster)==extent(sum_1$the_raster) & extent(sum_1$the_raster)==extent(sum_2$the_raster)
   resolutions_match <- raster::res(union_1_or_2$the_raster)==res(sum_1$the_raster) & res(union_1_or_2$the_raster)==res(sum_2$the_raster)
   resolutions_match <- resolutions_match[1]
-  
+
   if(!extents_match)
   {
     print("error: extents of supplied xtracks do not match")
@@ -862,34 +876,34 @@ calculate_geographic_overlap_and_segregation <- function(xtrack_list_1, xtrack_l
   } else if (!resolutions_match){
     print("error: resolutions of supplied xtracks do not match")
     stop()
-  } 
-    
+  }
+
   # square meters visited by 1
   square_meters_visited_1 <- sum_1$square_meters_visited
-  
+
   # square meters visited by 2
   square_meters_visited_2 <- sum_2$square_meters_visited
-  
-  # square meters visited by 1 or 2 
+
+  # square meters visited by 1 or 2
   square_meters_visited_1_or_2 <- union_1_or_2$square_meters_visited
-  
+
   # square meters visited by 1 and 2
   sum_of_1_and_2 <- sum_1$the_raster + sum_2$the_raster
   n_cells_visited_by_1_and_2 <- sum(raster::values(sum_of_1_and_2)==2)
   square_meters_visited_by_1_and_2 <- n_cells_visited_by_1_and_2 * cell_size_m * cell_size_m
-  
+
   # percent of what 1 visited that was visited by 2
   percent_of_what_1_visited_that_was_visited_by_2 <- round(square_meters_visited_by_1_and_2/square_meters_visited_1*100,2)
-  
+
   # percent of what 2 visited that was visited by 1
   percent_of_what_2_visited_that_was_visited_by_1 <- round(square_meters_visited_by_1_and_2/square_meters_visited_2*100,2)
-  
+
   # percent of what was visited by 1 or 2 that was visited by 1
   percent_of_what_was_visited_by_1_or_2_that_was_visited_by_1 <- round(square_meters_visited_1/square_meters_visited_1_or_2*100,2)
-  
+
   # percent of what was visited by 1 or 2 that was visited by 2
   percent_of_what_was_visited_by_1_or_2_that_was_visited_by_2 <- round(square_meters_visited_2/square_meters_visited_1_or_2*100,2)
-  
+
   # percent of what was visited by 1 or 2 that was visited by both 1 and 2
   percent_of_what_was_visited_by_1_or_2_that_was_visited_by_1_and_2 <- round(square_meters_visited_by_1_and_2/square_meters_visited_1_or_2*100,2)
 
@@ -907,30 +921,30 @@ calculate_geographic_overlap_and_segregation <- function(xtrack_list_1, xtrack_l
 
 # This function receives as input a list of xtracks, and a resolution in meters for a raster analysis.
 # The function sums together all the xtracks and then calculates the total square meters
-# of land visited across the tracks, at the specified raster-resolution. 
-# The function returns a list containing: 
+# of land visited across the tracks, at the specified raster-resolution.
+# The function returns a list containing:
 # 1) square_meters_visited The total square meters of land visited summed across list_of_tracks and
 # 2) the_raster a Raster object that is the result of the summation. Each cell will have a value of
-# zero (not visited) or 1 (visited at least once). 
+# zero (not visited) or 1 (visited at least once).
 
 get_raster_of_land_visited_binary_summed_across_xtracks <-function(xtrack_list, cell_size_m=10, extent=NULL)
 {
   #xtrack_list <- mm
-  #xtrack_list <- xtrack_list_1 
+  #xtrack_list <- xtrack_list_1
   #extent<- extent_of_union
-  
+
   sum_r <- NA
-  
+
   if(!is.null(extent))
   {
     sum_r <- get_empty_raster_defined_by_extent(boundary_extent = extent, resolution_m = cell_size_m, utm_proj_args = xtrack_list[[1]]$utm_proj_args)
   } else {
-  
+
     sum_r <- get_empty_raster_enclosing_xtracks(xtrack_list, resolution_m = cell_size_m)
   }
-  
+
   n_xtracks <- length(xtrack_list)
-  
+
   for(i in 1:n_xtracks)
   {
     #print(paste(camp, i, "of", nrow(ts), "track", ts$fk_track_id[i]))
@@ -941,29 +955,29 @@ get_raster_of_land_visited_binary_summed_across_xtracks <-function(xtrack_list, 
     values(r) <- vals
     sum_r <- sum_r + r
   }
-  
+
   sum_r[sum_r[]>1] <- 1
-  
+
   total_cells_visited <- sum(raster::values(sum_r))
-  
+
   square_meters_per_cell <- cell_size_m * cell_size_m
-  
+
   square_meters_visited <- square_meters_per_cell * total_cells_visited
-  
+
   return_list <- list(square_meters_visited=square_meters_visited, the_raster=sum_r)
   return(return_list)
 }
 
 
-#' Analysis of rates of habitat exploration.
+#' @title Analysis of rates of habitat exploration.
 #'
-#' Following Wood et al. 2021, this analysis computes the habitat visited / explored
+#' @description Following Wood et al. 2021, this analysis computes the habitat visited / explored
 #' each day, the marginal 'new' habitat visited for each day, and the cumulative habitat explored across all days.
 #'
 #' @param list_of_xtracks This analysis should be done with a temporally-sorted list of xtrack objects, with each xtrack representing
 #' one day of travel of the same person. In the list, the first day of data should be in position 1.
 #' @param cell_size_m The x and y size of each raster cell in the raster representation of the landscape, in meters.
-#' @return A dataframe (format described below) in which rows represent days, and columns provide analysis outcomes
+#' @returns A dataframe (format described below) in which rows represent days, and columns provide analysis outcomes
 #' \describe{
 #'   \item{day}{day number}
 #'   \item{sum_cells_visited_this_day}{the number of cells intersected on that day}
@@ -1100,43 +1114,42 @@ equalizeAxesLimits<- function(x_lim, y_lim)
   return(list(x_lim=new_x_lim, y_lim=new_y_lim, new_x_axis_distance_m=new_x_axis_distance_m, new_y_axis_distance_m=new_y_axis_distance_m))
 }
 
-# This function creates an empty raster layer with values of 0 in all cells.
+#` This function creates an empty raster layer with values of 0 in all cells.
 # This layer that should spatially enclose all the
-# trackpoints recorded for the supplied list of xtracks. 
-# The resolution of the raster is set by the parameter resolution_m, sent to the function. 
-# The coordinate system of the map will be taken from the first xtrack in the list, unless 
-# a non-null value (e.g. 32736) is supplied for the parameter utm_proj_args. 
+# trackpoints recorded for the supplied list of xtracks.
+# The resolution of the raster is set by the parameter resolution_m, sent to the function.
+# The coordinate system of the map will be taken from the first xtrack in the list, unless
+# a non-null value (e.g. 32736) is supplied for the parameter utm_proj_args.
 # To enable better plotting, there is a small buffer of size 'buffer_m' added to all four edges of the raster.
-
 get_empty_raster_enclosing_xtracks <-function(list_of_xtracks, resolution_m=10, utm_proj_args=NULL, buffer_m=10)
 {
-  if(is.null(utm_proj_args)) 
+  if(is.null(utm_proj_args))
   {
     utm_proj_args <- paste0("+init=epsg:",list_of_xtracks[[1]]$utm_epsg)
   } else {
     utm_proj_args <- paste0("+init=epsg:",utm_proj_args)
   }
-  
+
   # calculates and sends us the extent needed to contain all the supplied tracks
   boundary_extent <- get_raster_extent_enclosing_xtracks(list_of_xtracks, resolution_m = resolution_m, buffer_m=buffer_m)
-  
+
   r <- raster::raster(xmx=boundary_extent@xmax, xmn=boundary_extent@xmin, ymn=boundary_extent@ymin, ymx=boundary_extent@ymax)
-  res(r) <- resolution_m
-  crs(r) <- utm_proj_args
+  raster::res(r) <- resolution_m
+  raster::crs(r) <- utm_proj_args
   values(r) <- 0
   return(r)
 }
-  
+
 get_empty_raster_defined_by_extent <- function(boundary_extent, resolution_m=10, utm_proj_args=NULL)
 {
-  
-  if(is.null(utm_proj_args)) 
+
+  if(is.null(utm_proj_args))
   {
     print("Error: utm epsg needed for defining the empty raster")
   } else {
     #nothing
   }
-  
+
   r <- raster::raster(xmx=boundary_extent@xmax, xmn=boundary_extent@xmin, ymn=boundary_extent@ymin, ymx=boundary_extent@ymax)
   res(r) <- resolution_m
   crs(r) <- utm_proj_args
@@ -1146,15 +1159,15 @@ get_empty_raster_defined_by_extent <- function(boundary_extent, resolution_m=10,
 
 get_raster_extent_enclosing_xtracks <- function(xtrack_list, resolution_m=10, buffer_m=10)
 {
-  
+
   n_xtracks <- length(xtrack_list)
   # calculate the extent needed to contain all the supplied tracks
-  
+
   min_y_all_xtracks <- NA
   max_y_all_xtracks <- NA
   min_x_all_xtracks <- NA
   max_x_all_xtracks <- NA
-  
+
   for(i in 1:n_xtracks)
   {
     min_y_all_xtracks <- min(min_y_all_xtracks, xtrack_list[[i]]$min_y_utm, na.rm=TRUE)
@@ -1162,20 +1175,20 @@ get_raster_extent_enclosing_xtracks <- function(xtrack_list, resolution_m=10, bu
     min_x_all_xtracks <- min(min_x_all_xtracks, xtrack_list[[i]]$min_x_utm, na.rm=TRUE)
     max_x_all_xtracks <- max(max_x_all_xtracks, xtrack_list[[i]]$max_x_utm, na.rm=TRUE)
   }
-  
+
   # this is just for the aesthetics; when a raster is plotted it is
   # good to have a little buffer / margin for sanity's sake
   min_y_all_xtracks <-min_y_all_xtracks-buffer_m
   max_y_all_xtracks <-max_y_all_xtracks+buffer_m
   min_x_all_xtracks <-min_x_all_xtracks-buffer_m
   max_x_all_xtracks <-max_x_all_xtracks+buffer_m
-  
+
   llpoint <- data.frame(x=c(min_x_all_xtracks), y=c(min_y_all_xtracks))
   lrpoint <- data.frame(x=c(max_x_all_xtracks), y=c(min_y_all_xtracks))
   ulpoint <- data.frame(x=c(min_x_all_xtracks), y=c(max_y_all_xtracks))
   urpoint <- data.frame(x=c(max_x_all_xtracks), y=c(max_y_all_xtracks))
-  
-  
+
+
   boundary_points <- rbind(llpoint, lrpoint, ulpoint, urpoint)
   boundary_extent <- raster::extent(boundary_points)
   return(boundary_extent)
@@ -1191,7 +1204,7 @@ unit_test_geographic_segregation <- function()
   data(d6)
   data(d7)
   data(d8)
-  
+
   xt_1 <- xtrack(lat=d1$lat, lon=d1$lon, elevation_m=d1$elevation_m, in_camp=d1$in_camp, unix_time=d1$unix_time, distance_from_camp_m=d1$distance_from_camp_m, utm_epsg=32736)
   xt_2 <- xtrack(lat=d2$lat, lon=d2$lon, elevation_m=d2$elevation_m, in_camp=d2$in_camp, unix_time=d2$unix_time, distance_from_camp_m=d2$distance_from_camp_m, utm_epsg=32736)
   xt_3 <- xtrack(lat=d3$lat, lon=d3$lon, elevation_m=d3$elevation_m, in_camp=d3$in_camp, unix_time=d3$unix_time, distance_from_camp_m=d3$distance_from_camp_m, utm_epsg=32736)
@@ -1209,9 +1222,9 @@ unit_test_geographic_segregation <- function()
   mv_6 <- xt_6$as_mapview(color="white")
   mv_7 <- xt_7$as_mapview(color="lightblue")
   mv_8 <- xt_8$as_mapview(color="pink")
-  
+
   #exploring the data using plots, to inform testing
-  # mv_1 
+  # mv_1
   # mv_2
   # mv_3
   # mv_4
@@ -1219,46 +1232,46 @@ unit_test_geographic_segregation <- function()
   # mv_6
   # mv_7
   # mv_8
-  # 
-  # mv_1 + mv_6 
+  #
+  # mv_1 + mv_6
   # mv_6 + mv_3
   # mv_2 + mv_5
   # mv_7 + mv_8
-  
-  # known facts for testing: 
+
+  # known facts for testing:
   # 1. with xt_1 and xt_6, xt_1 has larger area visited
   # 2. with xt_1 and xt_6, percent AND overlap is modest
   # 3. with xt_1 and xt_6, xt_1 visits all areas visited by xt_6
   # 4. with xt_7 and xt_8, percent AND overlap is more than modest
   # 5. with xt_2 and xt_5 there is zero overlap
   # 6. with xt_5 and xt_5 there is 100 percent overlap
-  
+
   group_1 <- list(xt_1)
   group_2 <- list(xt_6)
   res_1 <- calculate_geographic_overlap_and_segregation(xtrack_list_1 = group_1, xtrack_list_2 = group_2, cell_size_m = 10)
   test_1 <- res_1$square_meters_visited_1 > res_1$square_meters_visited_2
   print(paste("test 1 passed:", test_1))
-  
+
   res_2 <- calculate_geographic_overlap_and_segregation(xtrack_list_1 = group_1, xtrack_list_2 = group_2, cell_size_m = 10)
   test_2 <- res_2$percent_of_what_was_visited_by_1_or_2_that_was_visited_by_1_and_2 < 25
   print(paste("test 2 passed:", test_2))
-  
+
   test_3 <- res_2$percent_of_what_2_visited_that_was_visited_by_1 == 100
   print(paste("test 3 passed:", test_3))
-  
+
   group_4 <- list(xt_7)
   group_5 <- list(xt_8)
   res_4 <- calculate_geographic_overlap_and_segregation(xtrack_list_1 = group_4, xtrack_list_2 = group_5, cell_size_m = 10)
   test_4 <- res_4$percent_of_what_was_visited_by_1_or_2_that_was_visited_by_1_and_2 > res_2$percent_of_what_was_visited_by_1_or_2_that_was_visited_by_1_and_2
   print(paste("test 4 passed:", test_4))
-  
+
   group_6 <- list(xt_2)
   group_7 <- list(xt_5)
   res_5 <- calculate_geographic_overlap_and_segregation(xtrack_list_1 = group_6, xtrack_list_2 = group_7, cell_size_m = 10)
   test_5 <- res_5$percent_of_what_1_visited_that_was_visited_by_2 == 0
   print(paste("test 5 passed:", test_5))
-  
+
   res_6 <- calculate_geographic_overlap_and_segregation(list(xt_1), list(xt_1), 10)
-  test_6 <- res_6$percent_of_what_1_visited_that_was_visited_by_2==100  
+  test_6 <- res_6$percent_of_what_1_visited_that_was_visited_by_2==100
   print(paste("test 6 passed:", test_6))
 }
