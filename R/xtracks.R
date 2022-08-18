@@ -818,8 +818,6 @@ xtrack <- setRefClass("xtrack",
 
 ))
 
-library(raster)
-
 #' @title Analysis of geographic overlap and geographic segregation between two groups of xtracks
 #'
 #' @description
@@ -1193,6 +1191,7 @@ get_raster_extent_enclosing_xtracks <- function(xtrack_list, resolution_m=10, bu
   boundary_extent <- raster::extent(boundary_points)
   return(boundary_extent)
 }
+
 
 unit_test_geographic_segregation <- function()
 {
