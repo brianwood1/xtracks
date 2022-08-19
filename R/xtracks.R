@@ -950,7 +950,7 @@ get_raster_of_land_visited_binary_summed_across_xtracks <-function(xtrack_list, 
     r <- t$as_raster_of_habitat_visited_binary(xmin = sum_r@extent@xmin, xmax = sum_r@extent@xmax, ymin = sum_r@extent@ymin, ymax = sum_r@extent@ymax)
     vals <- raster::values(r)
     vals[is.na(vals)]<-0
-    values(r) <- vals
+    raster::values(r) <- vals
     sum_r <- sum_r + r
   }
 
