@@ -1018,7 +1018,7 @@ get_hab_exp_across_days<-function(list_of_xtracks, cell_size_m=10)
       max_x_all_xtracks <- max(max_x_all_xtracks, list_of_xtracks[[i]]$max_x_utm, na.rm=TRUE)
   }
 
-  #this is just for the aesthetics when the raster's are plotted it is
+  #this is just for the aesthetics; when the rasters are plotted it is
   #good to have a little buffer / margin for sanity's sake
   min_y_all_xtracks <-min_y_all_xtracks-20
   max_y_all_xtracks <-max_y_all_xtracks+20
@@ -1042,7 +1042,7 @@ get_hab_exp_across_days<-function(list_of_xtracks, cell_size_m=10)
 
   cum_sum_raster <- list_of_rasters[[1]]
 
-  #this is creating an error ...
+
   res$sum_cells_visited_this_day[1] <- sum(raster::values(list_of_rasters[[1]]))
   res$cum_sum_cells_visited_across_days[1] <- sum(raster::values(cum_sum_raster))
   res$n_new_cells_visited_this_day[1] <- sum(raster::values(list_of_rasters[[1]]))
