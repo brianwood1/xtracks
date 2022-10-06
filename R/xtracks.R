@@ -53,14 +53,13 @@ xtrack <- setRefClass("xtrack",
                          tps <- data.frame(lon=trackpoints$lon, lat=trackpoints$lat)
                          lat_lon_args = "+proj=longlat +datum=WGS84 +ellps=WGS84"
                          utm_proj_args <<- paste0("+init=epsg:",utm_epsg)
-
-                         #utm <- "+proj=utm +zone=36 +south +ellps=WGS84 +datum=WGS84 +units=m +no_defs"
                          sp::coordinates(tps) = cbind("lon", "lat")
-                         sp::proj4string(tps) <- sp::CRS(lat_lon_args)
-                         #lines <- SpatialLines(list(Lines(list(Line(tps)), "id")))
-                         #proj4string(lines) <- CRS(lat_lon_args)
-                         trackpoints_utm <- sp::spTransform(tps,  sp::CRS(utm_proj_args))
-                          #head(coordinates(trackpoints_utm))
+                         lat_lon_crs = sp::CRS(SRS_string='EPSG:4326')
+                         sp::proj4string(tps) <- lat_lon_crs
+                         utm_crs = sp::CRS(SRS_string=paste0('EPSG:', utm_epsg))
+                         trackpoints_utm <- sp::spTransform(tps,  utm_crs)
+
+
                          trackpoints$utm_x <<- sp::coordinates(trackpoints_utm)[,1]
                          trackpoints$utm_y <<- sp::coordinates(trackpoints_utm)[,2]
                          range_utm_x <- range(trackpoints$utm_x)
