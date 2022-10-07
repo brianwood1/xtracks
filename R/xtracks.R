@@ -206,7 +206,29 @@ xtrack <- setRefClass("xtrack",
                        {"Segmentation of travel into bouts of out of camp travel. An out of camp bout is when an individual leaves camp, travels some distance, and then returns to camp."
                          return(out_of_camp_bout_records)
                        },
-                       get_longest_bout_trackpoints = function()
+                       get_trackpoints_of_longest_distance_bout = function()
+                       {"Get the trackpoints of the longest distance out of camp bout"
+
+                         if(nrow(out_of_camp_bout_records)==0)
+                         {
+                           #print("there are no out of camp bouts")
+                           return(NA)
+                         }
+
+                         distance_longest_bout <- max(out_of_camp_bout_records$total_length_of_bout_m)
+                         id_of_longest_distance_bout <- out_of_camp_bout_records$bout_number[out_of_camp_bout_records$total_length_of_bout_m==distance_longest_bout]
+
+                         start_time_lb <- out_of_camp_bout_records$time_leaving_camp[out_of_camp_bout_records$bout_number==id_of_longest_distance_bout]
+                         end_time_lb <- out_of_camp_bout_records$time_returning_to_camp[out_of_camp_bout_records$bout_number==id_of_longest_distance_bout]
+
+                         after_leave_time <- trackpoints$unix_time >= start_time_lb
+                         before_return_time <- trackpoints$unix_time <= end_time_lb
+                         during_longest_bout <- after_leave_time & before_return_time
+                         trackpoints_of_lb <- trackpoints[during_longest_bout,]
+                         return(trackpoints_of_lb)
+
+                       },
+                       get_trackpoints_of_longest_duration_bout = function()
                        { "Get the trackpoints of the longest duration out of camp bout"
 
 
@@ -394,7 +416,7 @@ xtrack <- setRefClass("xtrack",
                            end_inbound_lon <- trackpoints$lon[trackpoints$unix_time==most_distant_bout$time_returning_to_camp]
                            end_inbound_lat <- trackpoints$lat[trackpoints$unix_time==most_distant_bout$time_returning_to_camp]
 
-                           longest_bout <- get_longest_bout_trackpoints()
+                           longest_bout <- get_trackpoints_of_longest_duration_bout()
                            outbound_sp <- data.frame(x=c(start_outbound_lon, most_distant_lon), y=c(start_outbound_lat, most_distant_lat))
                            inbound_sp <- data.frame(x=c(most_distant_lon, end_inbound_lon), y=c(most_distant_lat, end_inbound_lat))
                            outbound_section <- longest_bout[longest_bout$is_in_outbound_segment,]
@@ -606,15 +628,22 @@ xtrack <- setRefClass("xtrack",
                       {
                         #print("in set sinuosity indices")
                         # true at initialization, may be set false if this track does not have a bout long enough to qualify for sinuosity measures
+
+                        # for debug (Oct 2022)
+                        # trackpoints <- xt_1$trackpoints
+                        # total_length_sin_criteria_m =50
+                        # distance_from_camp_sin_criteria_m=50
+
                         has_bout_appropriate_for_sinuosity_measures <<- 1
                         furthest_trackpoint_id <<- trackpoints$pk_trackpoint_id[trackpoints$distance_from_camp_m==max(trackpoints$distance_from_camp_m)][1]
-                        trackpoints_of_longest_bout <- get_longest_bout_trackpoints()
+                        trackpoints_of_longest_distance_bout <- get_trackpoints_of_longest_distance_bout()
+                        #trackpoints_of_longest_bout <- xt_1$get_trackpoints_of_longest_distance_bout()
                         #pk_track_id <- test_track$pk_track_id
 
 
                         # print(paste("setting sinuousity indices for track", pk_track_id))
 
-                        if(nrow(trackpoints_of_longest_bout)==0)
+                        if(nrow(trackpoints_of_longest_distance_bout)==0)
                         {
                           has_bout_appropriate_for_sinuosity_measures <<- 0
                           length_outbound_section_km<<-0
@@ -664,8 +693,8 @@ xtrack <- setRefClass("xtrack",
                             #merit calculation of sinuosity measures
 
 
-                            start_trackpoint_of_bout <- trackpoints_of_longest_bout[1,]
-                            end_trackpoint_of_bout <- trackpoints_of_longest_bout[nrow(trackpoints_of_longest_bout),]
+                            start_trackpoint_of_bout <- trackpoints_of_longest_distance_bout[1,]
+                            end_trackpoint_of_bout <- trackpoints_of_longest_distance_bout[nrow(trackpoints_of_longest_distance_bout),]
                             #here
                             outbound_section_starting_trackpoint_id<<-start_trackpoint_of_bout$pk_trackpoint_id
                             inbound_section_ending_trackpoint_id<<-end_trackpoint_of_bout$pk_trackpoint_id
@@ -673,15 +702,15 @@ xtrack <- setRefClass("xtrack",
                             #inbound_section_ending_trackpoint_id<-end_trackpoint_of_bout$pk_trackpoint_id
 
 
-                            furthest_trackpoint <- trackpoints_of_longest_bout[trackpoints_of_longest_bout$unix_time==stats_on_longest_distance_bout$max_dist_unix_time,]
+                            furthest_trackpoint <- trackpoints_of_longest_distance_bout[trackpoints_of_longest_distance_bout$unix_time==stats_on_longest_distance_bout$max_dist_unix_time,]
 
 
                             furthest_trackpoint_id <<- furthest_trackpoint$pk_trackpoint_id
                             furthest_trackpoint_unix_time <- furthest_trackpoint$unix_time
                             #furthest_trackpoint_id <- furthest_trackpoint$pk_trackpoint_id
 
-                            outbound_section <- trackpoints_of_longest_bout[(trackpoints_of_longest_bout$unix_time < furthest_trackpoint$unix_time),]
-                            inbound_section <- trackpoints_of_longest_bout[(trackpoints_of_longest_bout$unix_time >= furthest_trackpoint$unix_time),]
+                            outbound_section <- trackpoints_of_longest_distance_bout[(trackpoints_of_longest_distance_bout$unix_time < furthest_trackpoint$unix_time),]
+                            inbound_section <- trackpoints_of_longest_distance_bout[(trackpoints_of_longest_distance_bout$unix_time >= furthest_trackpoint$unix_time),]
 
                             #length(outbound_section)
 
